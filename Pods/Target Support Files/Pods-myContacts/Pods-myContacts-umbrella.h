@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_easy_deleteVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_easy_deleteVersionString[];
+FOUNDATION_EXPORT double Pods_myContactsVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_myContactsVersionString[];
 
