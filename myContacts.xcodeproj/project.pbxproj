@@ -8,9 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		DA3E042E4B365CA9FF323783 /* Pods_myContacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE8AC43AF86C3BFE00081841 /* Pods_myContacts.framework */; };
+		F71CE4F624D491B40054EC64 /* ContactStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CE4F524D491B40054EC64 /* ContactStoreManager.swift */; };
+		F71CE4F924D492C00054EC64 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CE4F724D492C00054EC64 /* Alert.swift */; };
+		F71CE4FA24D492C00054EC64 /* KeyboardLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CE4F824D492C00054EC64 /* KeyboardLayoutConstraint.swift */; };
+		F71CE4FC24D499590054EC64 /* ContactsViewController+SearchBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CE4FB24D499590054EC64 /* ContactsViewController+SearchBarDelegate.swift */; };
 		F7D4F3AE24D0788500C4DF99 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D4F3AD24D0788500C4DF99 /* AppDelegate.swift */; };
 		F7D4F3B024D0788500C4DF99 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D4F3AF24D0788500C4DF99 /* SceneDelegate.swift */; };
-		F7D4F3B224D0788500C4DF99 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D4F3B124D0788500C4DF99 /* ViewController.swift */; };
+		F7D4F3B224D0788500C4DF99 /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D4F3B124D0788500C4DF99 /* ContactsViewController.swift */; };
 		F7D4F3B524D0788500C4DF99 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F7D4F3B324D0788500C4DF99 /* Main.storyboard */; };
 		F7D4F3B724D0788700C4DF99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7D4F3B624D0788700C4DF99 /* Assets.xcassets */; };
 		F7D4F3BA24D0788700C4DF99 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F7D4F3B824D0788700C4DF99 /* LaunchScreen.storyboard */; };
@@ -27,10 +31,14 @@
 		A1E715E9578BCD4F517A1D87 /* Pods-easy-delete.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-easy-delete.release.xcconfig"; path = "Target Support Files/Pods-easy-delete/Pods-easy-delete.release.xcconfig"; sourceTree = "<group>"; };
 		BE8AC43AF86C3BFE00081841 /* Pods_myContacts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_myContacts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E176D9CB001DD61C502C94B4 /* Pods-myContacts.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-myContacts.debug.xcconfig"; path = "Target Support Files/Pods-myContacts/Pods-myContacts.debug.xcconfig"; sourceTree = "<group>"; };
+		F71CE4F524D491B40054EC64 /* ContactStoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactStoreManager.swift; sourceTree = "<group>"; };
+		F71CE4F724D492C00054EC64 /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		F71CE4F824D492C00054EC64 /* KeyboardLayoutConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutConstraint.swift; sourceTree = "<group>"; };
+		F71CE4FB24D499590054EC64 /* ContactsViewController+SearchBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactsViewController+SearchBarDelegate.swift"; sourceTree = "<group>"; };
 		F7D4F3AA24D0788500C4DF99 /* myContacts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = myContacts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7D4F3AD24D0788500C4DF99 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F7D4F3AF24D0788500C4DF99 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F7D4F3B124D0788500C4DF99 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F7D4F3B124D0788500C4DF99 /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		F7D4F3B424D0788500C4DF99 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F7D4F3B624D0788700C4DF99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F7D4F3B924D0788700C4DF99 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -71,6 +79,14 @@
 				BE8AC43AF86C3BFE00081841 /* Pods_myContacts.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F71CE4F424D48DFD0054EC64 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				F71CE4F524D491B40054EC64 /* ContactStoreManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 		F7D4F3A124D0788400C4DF99 = {
@@ -118,6 +134,7 @@
 		F7D4F3C224D357FA00C4DF99 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				F71CE4F424D48DFD0054EC64 /* Managers */,
 				F7D4F3CC24D35A0200C4DF99 /* Models */,
 				F7D4F3C924D358BE00C4DF99 /* DataSource */,
 			);
@@ -129,6 +146,7 @@
 			children = (
 				F7D4F3D524D35D4100C4DF99 /* BaseViewController+TextFieldNavigation.swift */,
 				F7D4F3D124D35B9200C4DF99 /* UIApplication+TopViewController.swift */,
+				F71CE4FB24D499590054EC64 /* ContactsViewController+SearchBarDelegate.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -137,7 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				F7D4F3CF24D35AAB00C4DF99 /* BaseViewController.swift */,
-				F7D4F3B124D0788500C4DF99 /* ViewController.swift */,
+				F7D4F3B124D0788500C4DF99 /* ContactsViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -154,6 +172,8 @@
 		F7D4F3C824D3587D00C4DF99 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				F71CE4F724D492C00054EC64 /* Alert.swift */,
+				F71CE4F824D492C00054EC64 /* KeyboardLayoutConstraint.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -289,13 +309,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7D4F3B224D0788500C4DF99 /* ViewController.swift in Sources */,
+				F7D4F3B224D0788500C4DF99 /* ContactsViewController.swift in Sources */,
 				F7D4F3CB24D358CE00C4DF99 /* BaseDataSource.swift in Sources */,
+				F71CE4FA24D492C00054EC64 /* KeyboardLayoutConstraint.swift in Sources */,
 				F7D4F3CE24D35A2800C4DF99 /* Contact.swift in Sources */,
 				F7D4F3D224D35B9200C4DF99 /* UIApplication+TopViewController.swift in Sources */,
 				F7D4F3AE24D0788500C4DF99 /* AppDelegate.swift in Sources */,
+				F71CE4F624D491B40054EC64 /* ContactStoreManager.swift in Sources */,
 				F7D4F3D624D35D4100C4DF99 /* BaseViewController+TextFieldNavigation.swift in Sources */,
+				F71CE4FC24D499590054EC64 /* ContactsViewController+SearchBarDelegate.swift in Sources */,
 				F7D4F3B024D0788500C4DF99 /* SceneDelegate.swift in Sources */,
+				F71CE4F924D492C00054EC64 /* Alert.swift in Sources */,
 				F7D4F3D024D35AAB00C4DF99 /* BaseViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
