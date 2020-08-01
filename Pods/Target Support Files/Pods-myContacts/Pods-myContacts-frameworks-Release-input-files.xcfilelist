@@ -1,4 +1,4 @@
-${PODS_ROOT}/Target Support Files/Pods-easy-delete/Pods-easy-delete-frameworks.sh
+${PODS_ROOT}/Target Support Files/Pods-myContacts/Pods-myContacts-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework
 ${BUILT_PRODUCTS_DIR}/Realm/Realm.framework
 ${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework
