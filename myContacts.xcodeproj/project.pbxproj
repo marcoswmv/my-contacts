@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DA3E042E4B365CA9FF323783 /* Pods_myContacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE8AC43AF86C3BFE00081841 /* Pods_myContacts.framework */; };
+		AF75F63B71A60655EA6A2E5F /* libPods-myContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F962672EA31D63D299ED39AE /* libPods-myContacts.a */; };
 		F71CE4F624D491B40054EC64 /* ContactStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CE4F524D491B40054EC64 /* ContactStoreManager.swift */; };
 		F71CE4F924D492C00054EC64 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CE4F724D492C00054EC64 /* Alert.swift */; };
 		F71CE4FA24D492C00054EC64 /* KeyboardLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CE4F824D492C00054EC64 /* KeyboardLayoutConstraint.swift */; };
@@ -30,7 +30,6 @@
 		1459ADFD867B57FF1C45810D /* Pods-myContacts.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-myContacts.release.xcconfig"; path = "Target Support Files/Pods-myContacts/Pods-myContacts.release.xcconfig"; sourceTree = "<group>"; };
 		8DA37AE8841C74BD56295556 /* Pods-easy-delete.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-easy-delete.debug.xcconfig"; path = "Target Support Files/Pods-easy-delete/Pods-easy-delete.debug.xcconfig"; sourceTree = "<group>"; };
 		A1E715E9578BCD4F517A1D87 /* Pods-easy-delete.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-easy-delete.release.xcconfig"; path = "Target Support Files/Pods-easy-delete/Pods-easy-delete.release.xcconfig"; sourceTree = "<group>"; };
-		BE8AC43AF86C3BFE00081841 /* Pods_myContacts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_myContacts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E176D9CB001DD61C502C94B4 /* Pods-myContacts.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-myContacts.debug.xcconfig"; path = "Target Support Files/Pods-myContacts/Pods-myContacts.debug.xcconfig"; sourceTree = "<group>"; };
 		F71CE4F524D491B40054EC64 /* ContactStoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactStoreManager.swift; sourceTree = "<group>"; };
 		F71CE4F724D492C00054EC64 /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
@@ -50,6 +49,7 @@
 		F7D4F3CF24D35AAB00C4DF99 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		F7D4F3D124D35B9200C4DF99 /* UIApplication+TopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+TopViewController.swift"; sourceTree = "<group>"; };
 		F7D4F3D524D35D4100C4DF99 /* BaseViewController+TextFieldNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseViewController+TextFieldNavigation.swift"; sourceTree = "<group>"; };
+		F962672EA31D63D299ED39AE /* libPods-myContacts.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-myContacts.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA3E042E4B365CA9FF323783 /* Pods_myContacts.framework in Frameworks */,
+				AF75F63B71A60655EA6A2E5F /* libPods-myContacts.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,7 +78,7 @@
 		8BB77ECF3BAF5A943EED8B8E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BE8AC43AF86C3BFE00081841 /* Pods_myContacts.framework */,
+				F962672EA31D63D299ED39AE /* libPods-myContacts.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -208,7 +208,6 @@
 				F7D4F3A624D0788500C4DF99 /* Sources */,
 				F7D4F3A724D0788500C4DF99 /* Frameworks */,
 				F7D4F3A824D0788500C4DF99 /* Resources */,
-				7C74E74F9C2824F45A62B710 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -286,23 +285,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7C74E74F9C2824F45A62B710 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-myContacts/Pods-myContacts-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-myContacts/Pods-myContacts-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-myContacts/Pods-myContacts-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -404,6 +386,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-Xfrontend -warn-long-function-bodies=300 -Xfrontend  -warn-long-expression-type-checking=300";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
