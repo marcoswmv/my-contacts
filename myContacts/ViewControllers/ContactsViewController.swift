@@ -20,11 +20,11 @@ class ContactsViewController: BaseViewController {
     
 //    MARK: - PROPERTIES
     
-    let searchController: UISearchController = UISearchController(searchResultsController: nil)
-    let myRefreshControl: UIRefreshControl = UIRefreshControl()
+    private let searchController: UISearchController = UISearchController(searchResultsController: nil)
+    private let myRefreshControl: UIRefreshControl = UIRefreshControl()
     
-    var managing: Bool = false
-    var timer: Timer?
+    private var managing: Bool = false
+    private var timer: Timer?
     
     
 //    MARK: - METHODS
@@ -37,7 +37,7 @@ class ContactsViewController: BaseViewController {
     }
     
     
-    func setupNavigationBar() {
+    fileprivate func setupNavigationBar() {
         navigationItem.title = "Contacts"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
@@ -47,7 +47,7 @@ class ContactsViewController: BaseViewController {
         setupRefreshControl()
     }
     
-    func setupSearchController() {
+    fileprivate func setupSearchController() {
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         self.definesPresentationContext = true
@@ -55,7 +55,7 @@ class ContactsViewController: BaseViewController {
         searchController.obscuresBackgroundDuringPresentation = false
     }
     
-    func setupRefreshControl() {
+    fileprivate func setupRefreshControl() {
         tableView.refreshControl = myRefreshControl
         myRefreshControl.addTarget(self, action: #selector(self.handleRefresh), for: .valueChanged)
     }

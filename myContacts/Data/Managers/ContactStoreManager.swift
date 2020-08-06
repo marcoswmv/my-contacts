@@ -10,11 +10,11 @@ import UIKit
 import Contacts
 import RealmSwift
 
-class ContactStoreManager {
+public class ContactStoreManager {
     
     typealias ContactsFetchingCompletionHandler = (_ contact: Contact?, _ error: Error?) -> Void
     
-    let store = CNContactStore()
+    private let store = CNContactStore()
     
     func fetchContacts(completionHandler: @escaping ContactsFetchingCompletionHandler) {
         
