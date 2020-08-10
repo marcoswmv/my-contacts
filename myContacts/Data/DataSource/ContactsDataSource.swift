@@ -25,7 +25,6 @@ class ContactsDataSource: BaseDataSource {
         onLoading!(true)
         
         DataBaseManager.shared.fetchContacts { (result, error) in
-
             self.onLoading!(false)
             if error != nil {
                 self.onError?(error!)
@@ -53,7 +52,14 @@ class ContactsDataSource: BaseDataSource {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            DataBaseManager.shared.delete(contact: data![indexPath.section][indexPath.row])
+            
+//            TO-DO:
+//            1 - Delete it from user's contacts - done
+//            2 - Set the contact as deleted - done
+//            3 - Update the data source - done
+//            4 - Verify if everything is working as expected
+            let contactToDeleteID = data![indexPath.section][indexPath.row].contactID
+            ContactStoreManager.shared.deleteContact(with: contactToDeleteID)
             self.reload()
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }

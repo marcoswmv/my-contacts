@@ -57,7 +57,7 @@ class ContactsViewController: BaseViewController {
 //            self.displayLoading(loading: isLoading)
         }
         dataSource?.onError = { (error) in
-            Alert.showFetchingErrorAlert(on: self, message: error.localizedDescription)
+            Alert.showErrorAlert(on: self, message: error.localizedDescription)
         }
         dataSource?.reload()
     }

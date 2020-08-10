@@ -45,6 +45,7 @@ public struct DataBaseManager {
         }
     }
     
+/// This method is used to permanently delete the contact from the database. And the contact is not restorable anymore.
     func delete(contact: Contact) {
         try! realm.write {
             realm.delete(contact)
@@ -57,6 +58,20 @@ public struct DataBaseManager {
         var contacts = [Contact]()
         result.forEach { contacts.append($0) }
         return contacts
+    }
+    
+/// This method is used to set the contact as deleted.
+/// The contact is removed instantly from user's native "Contacts" App but it's stored in the database for later use (restoration).
+    func setAsDeletedContact(with identifier: String) {
+        guard let contact = getContact(identifier) else { return }
+        try! realm.write {
+            contact.setValue(true, forKey: "wasDeleted")
+        }
+    }
+    
+    func getContact(_ identifier: String) -> Contact? {
+        let databaseContacts = getContacts()
+        return databaseContacts.first { $0.contactID == identifier }
     }
     
     func filterContacts(from searchTerm: String, in deleted: Bool) -> Results<Contact> {

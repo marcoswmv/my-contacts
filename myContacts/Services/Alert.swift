@@ -18,9 +18,15 @@ public class Alert {
         DispatchQueue.main.async { viewController.present(alert, animated: true, completion: nil) }
     }
     
-    static func showFetchingErrorAlert(on viewController: UIViewController, message: String) {
+    static func showErrorAlert(on viewController: UIViewController, message: String) {
         showBasicAlert(on: viewController,
-                       with: NSLocalizedString("fetching.404", comment: "Fetching Error Title"),
+                       with: NSLocalizedString("An Error Occurred", comment: "Error alert title"),
+                       message: message)
+    }
+    
+    static func showNoContactSelectedAlert(on viewController: UIViewController, message: String) {
+        showBasicAlert(on: viewController,
+                       with: NSLocalizedString("No Contact To Delete", comment: "No contact to delete alert title"),
                        message: message)
     }
     
