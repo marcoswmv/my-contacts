@@ -14,7 +14,7 @@ class ContactsViewController: BaseViewController {
     @IBOutlet weak var tableView: UITableView!
     
     @IBAction func manageOnTouchUpInside(_ sender: Any) {
-        
+        handleManage()
     }
     
     
@@ -22,22 +22,33 @@ class ContactsViewController: BaseViewController {
     
     private let searchController: UISearchController = UISearchController(searchResultsController: nil)
     private let myRefreshControl: UIRefreshControl = UIRefreshControl()
-    private var managing: Bool = false
+    private var isManaging: Bool = false
     
     var dataSource: ContactsDataSource?
     var shouldBeginEditing: Bool = true
     var timer: Timer?
     
     
-//    MARK: - METHODS
+//    MARK: - LIFECYCLE METHODS
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupDataSource()
         setupNavigationBar()
+        setupToolbar()
         tableView.isEditing = false
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        isManaging = false
+        navigationController?.setToolbarHidden(true, animated: true)
+    }
+    
+    
+//    MARK: - SETUP AND CONFIGURATION
     
     fileprivate func setupDataSource() {
         dataSource = ContactsDataSource(tableView: tableView)
@@ -74,12 +85,81 @@ class ContactsViewController: BaseViewController {
         myRefreshControl.addTarget(self, action: #selector(self.handleRefresh), for: .valueChanged)
     }
     
-    @objc func handleRefresh() {
+    fileprivate func setupToolbar() {
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAdd))
+        let selectButton = UIBarButtonItem(title: "Select", style: .done, target: self, action: #selector(handleSelect))
+        
+        if !(toolbarItems?.isEmpty ?? true) {
+            toolbarItems?.removeAll()
+        }
+
+        toolbarItems = [addButton, flexibleSpace, selectButton]
+    }
+    
+    fileprivate func setupToolbarForDeletion() {
+        if !toolbarItems!.isEmpty {
+            toolbarItems?.removeAll()
+        }
+        
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(handleCancel))
+        let deleteButton = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(handleDelete))
+
+        toolbarItems = [cancelButton, flexibleSpace, deleteButton]
+    }
+    
+    
+//    MARK: - HANDLERS
+    
+    @objc private func handleRefresh() {
         let delay = 1
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(delay)) {
             self.dataSource?.reload()
             self.myRefreshControl.endRefreshing()
         }
+    }
+    
+    @objc private func handleManage() {
+        if isManaging {
+            isManaging = false
+            navigationController?.setToolbarHidden(true, animated: true)
+        } else {
+            isManaging = true
+            navigationController?.setToolbarHidden(false, animated: true)
+        }
+    }
+    
+    @objc private func handleAdd() {
+        print("Handling addition")
+    }
+    
+    @objc private func handleSelect() {
+        setupToolbarForDeletion()
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        navigationItem.leftBarButtonItem?.isEnabled = false
+        
+        tableView.allowsMultipleSelectionDuringEditing = true
+        
+        if tableView.isEditing {
+            tableView.setEditing(tableView.isEditing, animated: true)
+            tableView.isEditing = false
+        } else {
+            tableView.setEditing(tableView.isEditing, animated: true)
+            tableView.isEditing = true
+        }
+    }
+    
+    @objc private func handleCancel() {
+        navigationItem.rightBarButtonItem?.isEnabled = true
+        navigationItem.leftBarButtonItem?.isEnabled = true
+        tableView.setEditing(false, animated: true)
+        tableView.isEditing = false
+        setupToolbar()
+    }
+    
+    @objc private func handleDelete() {
+        print("Handling deletion")
     }
     
 }
