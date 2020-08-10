@@ -26,29 +26,32 @@ extension ContactsViewController: UISearchBarDelegate {
         cancelSearchTimer()
         search(query: nil)
         searchBar.text = ""
+        tableView.backgroundView = UIView()
+        tableView.separatorStyle = .singleLine
+        dataSource?.reload()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchIfNedded(query: searchText)
     }
     
-    func cancelSearchTimer()  {
+    fileprivate func cancelSearchTimer()  {
         if timer != nil, timer!.isValid {
             timer?.invalidate()
             timer = nil
         }
     }
     
-    func searchIfNedded(query: String?) {
+    fileprivate func searchIfNedded(query: String?) {
         cancelSearchTimer()
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (timer) in
             self.search(query: query)
         })
     }
     
-    func search(query: String?)  {
-        print(query ?? "none")
+    fileprivate func search(query: String?)  {
+//        print(query ?? "none")
         guard let searchText = query else { return }
-//        dataSource?.startQuery(with: searchText)
+        dataSource?.startQuery(with: searchText)
     }
 }

@@ -22,9 +22,11 @@ class ContactsViewController: BaseViewController {
     
     private let searchController: UISearchController = UISearchController(searchResultsController: nil)
     private let myRefreshControl: UIRefreshControl = UIRefreshControl()
-    
     private var managing: Bool = false
-    private var timer: Timer?
+    
+    var dataSource: ContactsDataSource?
+    var shouldBeginEditing: Bool = true
+    var timer: Timer?
     
     
 //    MARK: - METHODS
@@ -32,10 +34,22 @@ class ContactsViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupDataSource()
         setupNavigationBar()
         tableView.isEditing = false
     }
     
+    fileprivate func setupDataSource() {
+        dataSource = ContactsDataSource(tableView: tableView)
+        dataSource?.onLoading = { (isLoading) in
+//            TO-DO: Implement loading animation
+//            self.displayLoading(loading: isLoading)
+        }
+        dataSource?.onError = { (error) in
+            Alert.showFetchingErrorAlert(on: self, message: error.localizedDescription)
+        }
+        dataSource?.reload()
+    }
     
     fileprivate func setupNavigationBar() {
         navigationItem.title = "Contacts"
@@ -61,7 +75,11 @@ class ContactsViewController: BaseViewController {
     }
     
     @objc func handleRefresh() {
-        
+        let delay = 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(delay)) {
+            self.dataSource?.reload()
+            self.myRefreshControl.endRefreshing()
+        }
     }
     
 }

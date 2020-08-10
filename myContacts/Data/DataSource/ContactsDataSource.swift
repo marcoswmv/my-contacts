@@ -11,8 +11,6 @@ import RealmSwift
 
 class ContactsDataSource: BaseDataSource {
     
-    private var manager: DataBaseManager = DataBaseManager()
-    
     private(set) var data: [[Contact]]?
     private var filteredData: [[Contact]]?
     private var sectionTitles: [String] = [String]()
@@ -26,21 +24,23 @@ class ContactsDataSource: BaseDataSource {
     override func reload() {
         onLoading!(true)
         
-        manager.fetchContacts { (result, error) in
-            
+        DataBaseManager.shared.fetchContacts { (result, error) in
+
             self.onLoading!(false)
             if error != nil {
                 self.onError?(error!)
             } else {
-                
+                self.isSearching = false
+                self.populateData(from: result)
+                self.tableView.reloadData()
             }
         }
     }
     
-    fileprivate func startQuery(with text: String) {
+    func startQuery(with text: String) {
         isSearching = !text.isEmpty ? true : false
-        let queryResult = manager.filterContacts(from: text, in: false)
-        populateData(from: queryResult)
+        let queryResult = DataBaseManager.shared.filterContacts(from: text, in: false)
+        populateData(from: queryResult, isSearching: true)
         tableView.reloadData()
     }
     
@@ -48,27 +48,32 @@ class ContactsDataSource: BaseDataSource {
 //    MARK: - Data Source
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        true
+        return true
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            
+            DataBaseManager.shared.delete(contact: data![indexPath.section][indexPath.row])
+            self.reload()
+            tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if isSearching {
-            return filteredSectionTitles[section]
+            return nil
         } else {
             return sectionTitles[section]
         }
     }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-//        TO-DO: return index for searching results
         if isSearching {
-            return filteredSectionTitles
+            if filteredSectionTitles.isEmpty {
+                return nil
+            } else {
+                return filteredSectionTitles
+            }
         } else {
             return sectionTitles
         }
@@ -83,9 +88,14 @@ class ContactsDataSource: BaseDataSource {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        To set back the table view background to it's default style
+        tableView.backgroundView = UIView()
+        tableView.separatorStyle = .singleLine
+        
         if isSearching {
             if filteredData?.count == 0 {
                 addTableViewBackgroundView(with: "No Results")
+                return 0
             }
             return filteredData?[section].count ?? 0
         } else {
@@ -106,12 +116,26 @@ class ContactsDataSource: BaseDataSource {
     }
     
 //    MARK: - Helper methods
+
+    fileprivate func generateSectionTitles(from contacts: Results<Contact>, isSearching: Bool) {
+
+        for contact in contacts {
+            let letter = String(contact.firstName.prefix(1))
+            if isSearching {
+                if !filteredSectionTitles.contains(letter) {
+                    filteredSectionTitles.append(letter)
+                }
+            } else {
+                if !sectionTitles.contains(letter) {
+                    sectionTitles.append(letter)
+                }
+            }
+        }
+    }
     
-    fileprivate func populateData(from contacts: Results<Contact>?, isSearching: Bool = false) {
-        guard let contacts = contacts else { return }
-        generateSectionTitles(from: contacts, isSearching: isSearching)
-        
+    fileprivate func groupContactsInData(by sectionTitles: [String], _ contacts: Results<Contact>) -> [[Contact]] {
         var result: [[Contact]] = [[Contact]]()
+        
         for letter in sectionTitles {
             var section = [Contact]()
             for contact in contacts {
@@ -121,29 +145,17 @@ class ContactsDataSource: BaseDataSource {
             }
             result.append(section)
         }
-        
-        if isSearching {
-            self.filteredData = result
-        } else {
-            self.data = result
-        }
+        return result
     }
     
-    fileprivate func generateSectionTitles(from contacts: Results<Contact>, isSearching: Bool) {
-//        filteredSectionTitles = [String]()
-//        sectionTitles = [String]()
-            
-            for contact in contacts {
-                let letter = String(contact.firstName.prefix(1))
-                if isSearching {
-                    if !filteredSectionTitles.contains(letter) {
-                        filteredSectionTitles.append(letter)
-                    }
-                } else {
-                    if !sectionTitles.contains(letter) {
-                        sectionTitles.append(letter)
-                    }
-                }
-            }
+    fileprivate func populateData(from contacts: Results<Contact>?, isSearching: Bool = false) {
+        guard let contacts = contacts else { return }
+        generateSectionTitles(from: contacts, isSearching: isSearching)
+        
+        if isSearching {
+            self.filteredData = groupContactsInData(by: filteredSectionTitles, contacts)
+        } else {
+            self.data = groupContactsInData(by: sectionTitles, contacts)
         }
+    }
 }

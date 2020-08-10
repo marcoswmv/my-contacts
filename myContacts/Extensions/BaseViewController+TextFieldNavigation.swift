@@ -20,21 +20,21 @@ extension BaseViewController {
             
         let attributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 30)]
             
-        let previousBarButton = UIBarButtonItem.init(title: " ◄ ", style: .plain, target: self, action: #selector(previousTextFieldAction))
+        let previousBarButton = UIBarButtonItem.init(title: " < ", style: .plain, target: self, action: #selector(previousTextFieldAction))
         previousBarButton.isEnabled = prevTextField?.isEnabled ?? false;
         previousBarButton.setTitleTextAttributes(attributes, for: .normal)
         previousBarButton.setTitleTextAttributes(attributes, for: .highlighted)
         previousBarButton.setTitleTextAttributes(attributes, for: .disabled)
         previousBarButton.tintColor = .blue
         
-        let nextBarButton = UIBarButtonItem.init(title: " ► ", style: .plain, target: self, action: #selector(nextTextFieldAction))
+        let nextBarButton = UIBarButtonItem.init(title: " > ", style: .plain, target: self, action: #selector(nextTextFieldAction))
         nextBarButton.isEnabled = nextTextField?.isEnabled ?? false;
         nextBarButton.setTitleTextAttributes(attributes, for: .normal)
         nextBarButton.setTitleTextAttributes(attributes, for: .highlighted)
         nextBarButton.setTitleTextAttributes(attributes, for: .disabled)
         nextBarButton.tintColor = .blue
         
-        let doneBarButton = UIBarButtonItem.init(title: "Готово", style: .done, target: self, action: #selector(resignKeyboard))
+        let doneBarButton = UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(resignKeyboard))
         doneBarButton.tintColor = .blue
             
         let keyboardToolBar = UIToolbar.init(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 40.0))
