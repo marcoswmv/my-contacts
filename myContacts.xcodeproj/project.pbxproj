@@ -14,6 +14,7 @@
 		F71CE4FC24D499590054EC64 /* ContactsViewController+SearchBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71CE4FB24D499590054EC64 /* ContactsViewController+SearchBarDelegate.swift */; };
 		F759207824D623F600153395 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F759207724D623F600153395 /* DataBaseManager.swift */; };
 		F7B661FD24DC521F000C2EB8 /* ContactsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B661FC24DC521F000C2EB8 /* ContactsDataSource.swift */; };
+		F7B6620024DC585B000C2EB8 /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B661FF24DC585B000C2EB8 /* ContactCell.swift */; };
 		F7D4F3AE24D0788500C4DF99 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D4F3AD24D0788500C4DF99 /* AppDelegate.swift */; };
 		F7D4F3B024D0788500C4DF99 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D4F3AF24D0788500C4DF99 /* SceneDelegate.swift */; };
 		F7D4F3B224D0788500C4DF99 /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D4F3B124D0788500C4DF99 /* ContactsViewController.swift */; };
@@ -39,6 +40,7 @@
 		F71CE4FB24D499590054EC64 /* ContactsViewController+SearchBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactsViewController+SearchBarDelegate.swift"; sourceTree = "<group>"; };
 		F759207724D623F600153395 /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
 		F7B661FC24DC521F000C2EB8 /* ContactsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsDataSource.swift; sourceTree = "<group>"; };
+		F7B661FF24DC585B000C2EB8 /* ContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
 		F7D4F3AA24D0788500C4DF99 /* myContacts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = myContacts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7D4F3AD24D0788500C4DF99 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F7D4F3AF24D0788500C4DF99 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -94,6 +96,22 @@
 			path = Managers;
 			sourceTree = "<group>";
 		};
+		F7B661FE24DC5841000C2EB8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F7B6620124DC5862000C2EB8 /* Cells */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F7B6620124DC5862000C2EB8 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				F7B661FF24DC585B000C2EB8 /* ContactCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		F7D4F3A124D0788400C4DF99 = {
 			isa = PBXGroup;
 			children = (
@@ -115,14 +133,15 @@
 		F7D4F3AC24D0788500C4DF99 /* myContacts */ = {
 			isa = PBXGroup;
 			children = (
-				F7D4F3C824D3587D00C4DF99 /* Services */,
-				F7D4F3BB24D0788700C4DF99 /* Info.plist */,
 				F7D4F3B624D0788700C4DF99 /* Assets.xcassets */,
 				F7D4F3C224D357FA00C4DF99 /* Data */,
 				F7D4F3C124D2FF9F00C4DF99 /* Delegates */,
 				F7D4F3C324D3580700C4DF99 /* Extensions */,
+				F7D4F3BB24D0788700C4DF99 /* Info.plist */,
+				F7D4F3C824D3587D00C4DF99 /* Services */,
 				F7D4F3C624D3584F00C4DF99 /* Storyboard */,
 				F7D4F3C424D3580D00C4DF99 /* ViewControllers */,
+				F7B661FE24DC5841000C2EB8 /* Views */,
 			);
 			path = myContacts;
 			sourceTree = "<group>";
@@ -139,9 +158,9 @@
 		F7D4F3C224D357FA00C4DF99 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				F7D4F3C924D358BE00C4DF99 /* DataSource */,
 				F71CE4F424D48DFD0054EC64 /* Managers */,
 				F7D4F3CC24D35A0200C4DF99 /* Models */,
-				F7D4F3C924D358BE00C4DF99 /* DataSource */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -297,6 +316,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F7B6620024DC585B000C2EB8 /* ContactCell.swift in Sources */,
 				F7D4F3B224D0788500C4DF99 /* ContactsViewController.swift in Sources */,
 				F7D4F3CB24D358CE00C4DF99 /* BaseDataSource.swift in Sources */,
 				F71CE4FA24D492C00054EC64 /* KeyboardLayoutConstraint.swift in Sources */,

@@ -6,11 +6,17 @@
 //  Copyright © 2020 Antares Software Group. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import Contacts
 import RealmSwift
 
-public class ContactStoreManager {
+public struct ContactStoreManager {
+    
+///    Singleton. This was created in order to avoid more than one object of type DataBaseManager being created.
+///    The init is declared to prevent the struct's memberwise/parenthesys "()" from appearing
+///    and is private to avoid the init to be called with dot notation
+    static let shared = ContactStoreManager()
+    private init() { }
     
     typealias ContactsFetchingCompletionHandler = (_ contact: Contact?, _ error: Error?) -> Void
     
@@ -24,11 +30,10 @@ public class ContactStoreManager {
                 
                 if let errorToCatch = error {
                     
-//                    TO-DO: implement Alerts
-                    print("Failed to request access: ", errorToCatch)
+                    completionHandler(nil, errorToCatch)
                 } else if granted {
                     
-                    print("Access granted!")
+//                    print("Access granted!")
                     
                     let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey,
                     CNContactThumbnailImageDataKey, CNContactImageDataAvailableKey,
