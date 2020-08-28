@@ -10,53 +10,80 @@ import Foundation
 import Contacts
 import RealmSwift
 
-public struct DataBaseManager {
-    
-///    Singleton. This was created in order to avoid more than one object of type DataBaseManager being created.
-///    The init is declared to prevent the struct's memberwise/parenthesys "()" from appearing
-///    and is private to avoid the init to be called with dot notation
-    static let shared = DataBaseManager()
-    private init() { }
+public class DataBaseManager {
     
     typealias ContactsFetchingCompletionHandler = (_ contact: Results<Contact>?, _ error: Error?) -> Void
     
     private let realm = try! Realm()
+    var token: NotificationToken!
+    var dataChanged: (() -> Void)?
+    
+///    This singleton was created in order to avoid more than one object of type DataBaseManager being created.
+///    The init() is declared to prevent the struct's memberwise/parenthesys "()" from appearing
+///    and is private to avoid the init to be called with dot notation
+    static let shared = DataBaseManager()
+    private init() {
+        let realm = try! Realm()
+        token = realm.observe { (notification, realm) in
+            if let change = self.dataChanged {
+                change()
+            }
+        }
+    }
+    
+    deinit {
+        token.invalidate()
+    }
     
     func fetchContacts(completionHandler: @escaping ContactsFetchingCompletionHandler) {
-        
-        ContactStoreManager.shared.fetchContacts { (contact, error) in
+        ContactStoreManager.shared.requestContacts { (contact, error) in
             
             if error != nil {
-                
                 completionHandler(nil, error)
             } else {
-                
                 guard let contact = contact else { return }
-                let realm = try! Realm()
-                try! realm.write({
-                    realm.add(contact, update: .modified)
-                })
+                self.update(with: contact)
             }
         }
         
-        let contacts = realm.objects(Contact.self).filter("wasDeleted = false").sorted(byKeyPath: "firstName", ascending: true)
+        let contacts = self.getContacts()
         if !contacts.isEmpty {
             completionHandler(contacts, nil)
         }
     }
     
+/// This method is used to populate/update the database with data received from Contacts App service
+    func update(with contact: Contact) {
+        let realm = try! Realm()
+        try! realm.write({
+            realm.create(Contact.self, value: contact, update: .modified)
+        })
+    }
+    
+/// This method is used to permanently delete the contact from the database. And the contact is not restorable anymore.
     func delete(contact: Contact) {
         try! realm.write {
             realm.delete(contact)
         }
     }
     
-    func getContacts() -> [Contact] {
-        let result = realm.objects(Contact.self)
-        
-        var contacts = [Contact]()
-        result.forEach { contacts.append($0) }
-        return contacts
+    func getContacts() -> Results<Contact> {
+        let result = realm.objects(Contact.self).filter("wasDeleted = false").sorted(byKeyPath: "firstName", ascending: true)
+        return result
+    }
+    
+/// This method is used to set the contact as deleted.
+/// The contact is removed instantly from user's native "Contacts" App but it's stored in the database for later use (restoration).
+    func setAsDeletedContact(with identifier: String) {
+        guard let contact = getContact(identifier) else { return }
+        try! realm.write {
+            contact.setValue(true, forKey: "wasDeleted")
+        }
+    }
+    
+    func getContact(_ identifier: String) -> Contact? {
+        let databaseContacts = getContacts()
+        return databaseContacts.first { $0.contactID == identifier }
     }
     
     func filterContacts(from searchTerm: String, in deleted: Bool) -> Results<Contact> {

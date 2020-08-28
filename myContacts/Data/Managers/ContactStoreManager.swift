@@ -22,7 +22,7 @@ public struct ContactStoreManager {
     
     private let store = CNContactStore()
     
-    func fetchContacts(completionHandler: @escaping ContactsFetchingCompletionHandler) {
+    func requestContacts(completionHandler: @escaping ContactsFetchingCompletionHandler) {
         
         DispatchQueue.global(qos: .background).async {
             
@@ -51,6 +51,40 @@ public struct ContactStoreManager {
                 } else {
                     print("Access Denied")
                 }
+            }
+        }
+    }
+    
+/// This method is going to delete the contact from user's native "Contact" app.
+    func deleteContact(with identifier: String) {
+        
+        if identifier.isEmpty {
+            Alert.showNoContactSelectedAlert(on: UIApplication.topViewController()!, message: "Please select a contact to delete")
+        } else {
+            
+            DataBaseManager.shared.setAsDeletedContact(with: identifier)
+
+            let predicate = CNContact.predicateForContacts(withIdentifiers: [identifier])
+            let keys = [CNContactIdentifierKey]
+            
+            do {
+                let contacts = try store.unifiedContacts(matching: predicate, keysToFetch: keys as [CNKeyDescriptor])
+                guard contacts.count > 0 else { print("No contacts found"); return }
+                guard let contact = contacts.first else { return }
+                
+                let request = CNSaveRequest()
+                let mutableContact = contact.mutableCopy() as! CNMutableContact
+                
+                request.delete(mutableContact)
+                do {
+                    try store.execute(request)
+                    
+                    print("The contact was successfully deleted!")
+                } catch let err {
+                    Alert.showErrorAlert(on: UIApplication.topViewController()!, message: err.localizedDescription)
+                }
+            } catch let error {
+                Alert.showErrorAlert(on: UIApplication.topViewController()!, message: error.localizedDescription)
             }
         }
     }
