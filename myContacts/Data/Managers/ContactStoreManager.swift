@@ -61,9 +61,6 @@ public struct ContactStoreManager {
         if identifier.isEmpty {
             Alert.showNoContactSelectedAlert(on: UIApplication.topViewController()!, message: "Please select a contact to delete")
         } else {
-            
-            DataBaseManager.shared.setAsDeletedContact(with: identifier)
-
             let predicate = CNContact.predicateForContacts(withIdentifiers: [identifier])
             let keys = [CNContactIdentifierKey]
             
@@ -86,6 +83,8 @@ public struct ContactStoreManager {
             } catch let error {
                 Alert.showErrorAlert(on: UIApplication.topViewController()!, message: error.localizedDescription)
             }
+            
+            DataBaseManager.shared.setAsDeletedContact(with: identifier)
         }
     }
 }

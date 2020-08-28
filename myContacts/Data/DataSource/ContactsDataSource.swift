@@ -36,7 +36,7 @@ class ContactsDataSource: BaseDataSource {
         }
         
 //        Refactor this peace of code in the future because i'm not
-//        sure if it's a good practice to call twice the "populateData()" method in the same function
+//        sure if it's a good practice to call twice the "populateData()" method in the same function.
 //        NOTE: This solved the problem of updating the table with new contact on launch and on pull to refresh.
         DataBaseManager.shared.dataChanged = {
             let result = DataBaseManager.shared.getContacts()
@@ -64,12 +64,13 @@ class ContactsDataSource: BaseDataSource {
             
 //            TO-DO:
 //            1 - Delete it from user's contacts - done
-//            2 - Set the contact as deleted - done
+//            2 - Set the contact as deleted in database - done
 //            3 - Update the data source - done
 //            4 - Verify if everything is working as expected
+            
             let contactToDeleteID = data![indexPath.section][indexPath.row].contactID
             ContactStoreManager.shared.deleteContact(with: contactToDeleteID)
-            self.reload()
+            tableView.reloadData()
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
