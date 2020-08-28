@@ -34,6 +34,15 @@ class ContactsDataSource: BaseDataSource {
                 self.tableView.reloadData()
             }
         }
+        
+//        Refactor this peace of code in the future because i'm not
+//        sure if it's a good practice to call twice the "populateData()" method in the same function
+//        NOTE: This solved the problem of updating the table with new contact on launch and on pull to refresh.
+        DataBaseManager.shared.dataChanged = {
+            let result = DataBaseManager.shared.getContacts()
+            self.populateData(from: result)
+            self.tableView.reloadData()
+        }
     }
     
     func startQuery(with text: String) {

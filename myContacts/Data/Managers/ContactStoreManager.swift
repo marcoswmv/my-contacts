@@ -22,7 +22,7 @@ public struct ContactStoreManager {
     
     private let store = CNContactStore()
     
-    func fetchContacts(completionHandler: @escaping ContactsFetchingCompletionHandler) {
+    func requestContacts(completionHandler: @escaping ContactsFetchingCompletionHandler) {
         
         DispatchQueue.global(qos: .background).async {
             
