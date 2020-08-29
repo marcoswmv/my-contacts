@@ -86,8 +86,8 @@ public class DataBaseManager {
         return databaseContacts.first { $0.contactID == identifier }
     }
     
-    func filterContacts(from searchTerm: String, in deleted: Bool) -> Results<Contact> {
-        let predicate = NSPredicate(format: "firstName CONTAINS %@ AND wasDeleted = %@", argumentArray: [searchTerm, deleted])
+    func filterContacts(from searchTerm: String, wasDeleted: Bool) -> Results<Contact> {
+        let predicate = NSPredicate(format: "firstName CONTAINS %@ AND wasDeleted = %@", argumentArray: [searchTerm, wasDeleted])
         return realm.objects(Contact.self).filter(predicate).sorted(byKeyPath: "firstName", ascending: true)
     }
 }

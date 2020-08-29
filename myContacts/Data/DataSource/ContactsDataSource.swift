@@ -12,9 +12,9 @@ import RealmSwift
 class ContactsDataSource: BaseDataSource {
     
     private(set) var data: [[Contact]]?
-    private var filteredData: [[Contact]]?
+    private var filteredData: Results<Contact>?
     private var sectionTitles: [String] = [String]()
-    private var filteredSectionTitles: [String] = [String]()
+//    private var filteredSectionTitles: [String] = [String]()
     private var isSearching: Bool = false
     
     override func setup() {
@@ -37,7 +37,6 @@ class ContactsDataSource: BaseDataSource {
 //        Refactor this peace of code in the future because i'm not
 //        sure if it's a good practice to call twice the "populateData()" method in the same function.
 //        NOTE: This solved the problem of updating the table with new contact on launch and on pull to refresh.
-        
         DataBaseManager.shared.dataChanged = { result in
             self.updateData(with: result)
         }
@@ -50,7 +49,7 @@ class ContactsDataSource: BaseDataSource {
     
     func startQuery(with text: String) {
         isSearching = !text.isEmpty ? true : false
-        let queryResult = DataBaseManager.shared.filterContacts(from: text, in: false)
+        let queryResult = DataBaseManager.shared.filterContacts(from: text, wasDeleted: false)
         populateData(from: queryResult, isSearching: true)
         tableView.reloadData()
     }
@@ -81,25 +80,22 @@ class ContactsDataSource: BaseDataSource {
         if isSearching {
             return nil
         } else {
-            return sectionTitles[section]
+            return data![section].isEmpty ? nil : sectionTitles[section]
         }
     }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         if isSearching {
-            if filteredSectionTitles.isEmpty {
-                return nil
-            } else {
-                return filteredSectionTitles
-            }
+            return nil
         } else {
+            
             return sectionTitles
         }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         if isSearching {
-            return filteredSectionTitles.isEmpty ? 1 : filteredSectionTitles.count
+            return 1
         } else {
             return sectionTitles.isEmpty ? 1 : sectionTitles.count
         }
@@ -115,7 +111,7 @@ class ContactsDataSource: BaseDataSource {
                 addTableViewBackgroundView(with: "No Results")
                 return 0
             }
-            return filteredData?[section].count ?? 0
+            return filteredData?.count ?? 0
         } else {
             return data?[section].count ?? 0
         }
@@ -125,7 +121,7 @@ class ContactsDataSource: BaseDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ContactCell", for: indexPath) as! ContactCell
         
         if isSearching {
-            cell.data = filteredData![indexPath.section][indexPath.row]
+            cell.data = filteredData![indexPath.row]
         } else {
             cell.data = data![indexPath.section][indexPath.row]
         }
@@ -139,18 +135,17 @@ class ContactsDataSource: BaseDataSource {
 
         for contact in contacts {
             let letter = String(contact.firstName.prefix(1))
-            if isSearching {
-                if !filteredSectionTitles.contains(letter) {
-                    filteredSectionTitles.append(letter)
-                }
-            } else {
+            if !isSearching {
                 if !sectionTitles.contains(letter) {
                     sectionTitles.append(letter)
                 }
             }
         }
+        
+        sectionTitles = sectionTitles.sorted(by: { $0 < $1 })
     }
     
+///     This method groups the contacts by sections in a bidimensional array
     fileprivate func groupContactsInData(by sectionTitles: [String], _ contacts: Results<Contact>) -> [[Contact]] {
         var result: [[Contact]] = [[Contact]]()
         
@@ -171,7 +166,7 @@ class ContactsDataSource: BaseDataSource {
         generateSectionTitles(from: contacts, isSearching: isSearching)
         
         if isSearching {
-            self.filteredData = groupContactsInData(by: filteredSectionTitles, contacts)
+            self.filteredData = contacts
         } else {
             self.data = groupContactsInData(by: sectionTitles, contacts)
         }
