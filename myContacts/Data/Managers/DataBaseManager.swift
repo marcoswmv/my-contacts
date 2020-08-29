@@ -16,7 +16,7 @@ public class DataBaseManager {
     
     private let realm = try! Realm()
     var token: NotificationToken!
-    var dataChanged: (() -> Void)?
+    var dataChanged: ((_ result: Results<Contact>?) -> Void)?
     
 ///    This singleton was created in order to avoid more than one object of type DataBaseManager being created.
 ///    The init() is declared to prevent the struct's memberwise/parenthesys "()" from appearing
@@ -26,7 +26,7 @@ public class DataBaseManager {
         let realm = try! Realm()
         token = realm.observe { (notification, realm) in
             if let change = self.dataChanged {
-                change()
+                change(self.getContacts())
             }
         }
     }

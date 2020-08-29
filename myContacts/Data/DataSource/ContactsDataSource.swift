@@ -30,19 +30,22 @@ class ContactsDataSource: BaseDataSource {
                 self.onError?(error!)
             } else {
                 self.isSearching = false
-                self.populateData(from: result)
-                self.tableView.reloadData()
+                self.updateData(with: result)
             }
         }
         
 //        Refactor this peace of code in the future because i'm not
 //        sure if it's a good practice to call twice the "populateData()" method in the same function.
 //        NOTE: This solved the problem of updating the table with new contact on launch and on pull to refresh.
-        DataBaseManager.shared.dataChanged = {
-            let result = DataBaseManager.shared.getContacts()
-            self.populateData(from: result)
-            self.tableView.reloadData()
+        
+        DataBaseManager.shared.dataChanged = { result in
+            self.updateData(with: result)
         }
+    }
+    
+    fileprivate func updateData(with result: Results<Contact>?) {
+        self.populateData(from: result)
+        self.tableView.reloadData()
     }
     
     func startQuery(with text: String) {
@@ -62,16 +65,15 @@ class ContactsDataSource: BaseDataSource {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             
-//            TO-DO:
-//            1 - Delete it from user's contacts - done
-//            2 - Set the contact as deleted in database - done
-//            3 - Update the data source - done
-//            4 - Verify if everything is working as expected
-            
             let contactToDeleteID = data![indexPath.section][indexPath.row].contactID
             ContactStoreManager.shared.deleteContact(with: contactToDeleteID)
-            tableView.reloadData()
-            tableView.deleteRows(at: [indexPath], with: .automatic)
+            DataBaseManager.shared.setAsDeletedContact(with: contactToDeleteID)
+            
+//            Current problem: Clear section header in case there isn't any contacts. If I delete all the contacts from a section, the section bellow is hidden as well
+            if data![indexPath.section].isEmpty {
+                sectionTitles.remove(at: indexPath.section)
+                tableView.reloadData()
+            }
         }
     }
     
