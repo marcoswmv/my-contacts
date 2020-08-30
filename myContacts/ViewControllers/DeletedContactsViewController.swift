@@ -1,20 +1,19 @@
 //
-//  ViewController.swift
-//  easy-delete
+//  DeletedContactsViewController.swift
+//  myContacts
 //
-//  Created by Marcos Vicente on 28.07.2020.
+//  Created by Marcos Vicente on 30.08.2020.
 //  Copyright © 2020 Antares Software Group. All rights reserved.
 //
 
 import UIKit
 
-class ContactsViewController: BaseViewController {
-
+class DeletedContactsViewController: UIViewController {
+    
 //    MARK: - OUTLETS
     @IBOutlet weak var tableView: UITableView!
     
     @IBAction func manageOnTouchUpInside(_ sender: Any) {
-        handleManage()
     }
     
     
@@ -24,7 +23,7 @@ class ContactsViewController: BaseViewController {
     private let myRefreshControl: UIRefreshControl = UIRefreshControl()
     private var isManaging: Bool = false
     
-    var dataSource: ContactsDataSource?
+    var dataSource: DeletedContactsDataSource?
     var shouldBeginEditing: Bool = true
     var timer: Timer?
     
@@ -33,25 +32,18 @@ class ContactsViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setupDataSource()
         setupNavigationBar()
         setupToolbar()
         tableView.isEditing = false
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        isManaging = false
-        navigationController?.setToolbarHidden(true, animated: true)
-    }
-    
-    
+
 //    MARK: - SETUP AND CONFIGURATION
     
     fileprivate func setupDataSource() {
-        dataSource = ContactsDataSource(tableView: tableView)
+        dataSource = DeletedContactsDataSource(tableView: tableView)
         dataSource?.onLoading = { (isLoading) in
 //            TO-DO: Implement loading animation
 //            self.displayLoading(loading: isLoading)
@@ -63,7 +55,7 @@ class ContactsViewController: BaseViewController {
     }
     
     fileprivate func setupNavigationBar() {
-        navigationItem.title = "Contacts"
+        navigationItem.title = "Deleted"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         navigationController?.navigationBar.shadowImage = nil
@@ -87,14 +79,13 @@ class ContactsViewController: BaseViewController {
     
     fileprivate func setupToolbar() {
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAdd))
         let selectButton = UIBarButtonItem(title: "Select", style: .done, target: self, action: #selector(handleSelect))
         
         if !(toolbarItems?.isEmpty ?? true) {
             toolbarItems?.removeAll()
         }
 
-        toolbarItems = [addButton, flexibleSpace, selectButton]
+        toolbarItems = [flexibleSpace, selectButton]
     }
     
     fileprivate func setupToolbarForDeletion() {
@@ -116,8 +107,7 @@ class ContactsViewController: BaseViewController {
         tableView.setEditing(false, animated: true)
         tableView.isEditing = false
     }
-    
-    
+
 //    MARK: - HANDLERS
     
     @objc private func handleRefresh() {
@@ -136,10 +126,6 @@ class ContactsViewController: BaseViewController {
             isManaging = true
             navigationController?.setToolbarHidden(false, animated: true)
         }
-    }
-    
-    @objc private func handleAdd() {
-        print("Handling addition")
     }
     
     @objc private func handleSelect() {
@@ -167,14 +153,13 @@ class ContactsViewController: BaseViewController {
     }
     
     @objc private func handleDelete() {
+//        TO-DO: First Ask the user if he's sure of this irrevesible action
         if let indexPaths = tableView.indexPathsForSelectedRows {
             for indexPath in indexPaths.reversed() {
-                dataSource?.deleteSelectedContacts!(indexPath)
+//                dataSource?.deleteSelectedContacts!(indexPath)
             }
             updateUIAfterDeletingSelectedContacts()
             setupToolbar()
         }
     }
-    
 }
-

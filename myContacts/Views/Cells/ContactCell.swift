@@ -15,7 +15,7 @@ class ContactCell: UITableViewCell {
     
     var data: Contact? {
         didSet {
-            givenName.text = data?.firstName
+            givenName.text = data?.givenName
             familyName.text = data?.familyName != "" ? data?.familyName : ""
         }
     }

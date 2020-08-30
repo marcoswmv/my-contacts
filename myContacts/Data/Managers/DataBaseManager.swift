@@ -16,7 +16,7 @@ public class DataBaseManager {
     
     private let realm = try! Realm()
     var token: NotificationToken!
-    var dataChanged: (() -> Void)?
+    var dataChanged: ((_ result: Results<Contact>?) -> Void)?
     
 ///    This singleton was created in order to avoid more than one object of type DataBaseManager being created.
 ///    The init() is declared to prevent the struct's memberwise/parenthesys "()" from appearing
@@ -26,7 +26,7 @@ public class DataBaseManager {
         let realm = try! Realm()
         token = realm.observe { (notification, realm) in
             if let change = self.dataChanged {
-                change()
+                change(self.getContacts())
             }
         }
     }
@@ -67,8 +67,9 @@ public class DataBaseManager {
         }
     }
     
-    func getContacts() -> Results<Contact> {
-        let result = realm.objects(Contact.self).filter("wasDeleted = false").sorted(byKeyPath: "firstName", ascending: true)
+    func getContacts(wasDeleted: Bool = false) -> Results<Contact> {
+        let predicate = NSPredicate(format: "wasDeleted = %@", argumentArray: [wasDeleted])
+        let result = realm.objects(Contact.self).filter(predicate).sorted(byKeyPath: "givenName", ascending: true)
         return result
     }
     
@@ -78,6 +79,7 @@ public class DataBaseManager {
         guard let contact = getContact(identifier) else { return }
         try! realm.write {
             contact.setValue(true, forKey: "wasDeleted")
+            contact.setValue(30, forKey: "daysToDeletion")
         }
     }
     
@@ -86,8 +88,8 @@ public class DataBaseManager {
         return databaseContacts.first { $0.contactID == identifier }
     }
     
-    func filterContacts(from searchTerm: String, in deleted: Bool) -> Results<Contact> {
-        let predicate = NSPredicate(format: "firstName CONTAINS %@ AND wasDeleted = %@", argumentArray: [searchTerm, deleted])
-        return realm.objects(Contact.self).filter(predicate).sorted(byKeyPath: "firstName", ascending: true)
+    func filterContacts(from searchTerm: String, wasDeleted: Bool) -> Results<Contact> {
+        let predicate = NSPredicate(format: "givenName CONTAINS %@ AND wasDeleted = %@", argumentArray: [searchTerm, wasDeleted])
+        return realm.objects(Contact.self).filter(predicate).sorted(byKeyPath: "givenName", ascending: true)
     }
 }

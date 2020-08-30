@@ -12,7 +12,7 @@ import RealmSwift
 
 public struct ContactStoreManager {
     
-///    Singleton. This was created in order to avoid more than one object of type DataBaseManager being created.
+///    Singleton. This was created in order to avoid more than one object of type ContactStoreManager being created.
 ///    The init is declared to prevent the struct's memberwise/parenthesys "()" from appearing
 ///    and is private to avoid the init to be called with dot notation
     static let shared = ContactStoreManager()
@@ -42,7 +42,7 @@ public struct ContactStoreManager {
                     
                     do {
                         try self.store.enumerateContacts(with: request, usingBlock: { (contact, stopPointerIfYouWantToStopEnumerating) in
-                            let contact = Contact(contact: contact, wasDeleted: false)
+                            let contact = Contact(contact: contact)
                             completionHandler(contact, nil)
                         })
                     } catch {
@@ -61,9 +61,6 @@ public struct ContactStoreManager {
         if identifier.isEmpty {
             Alert.showNoContactSelectedAlert(on: UIApplication.topViewController()!, message: "Please select a contact to delete")
         } else {
-            
-            DataBaseManager.shared.setAsDeletedContact(with: identifier)
-
             let predicate = CNContact.predicateForContacts(withIdentifiers: [identifier])
             let keys = [CNContactIdentifierKey]
             
@@ -78,8 +75,6 @@ public struct ContactStoreManager {
                 request.delete(mutableContact)
                 do {
                     try store.execute(request)
-                    
-                    print("The contact was successfully deleted!")
                 } catch let err {
                     Alert.showErrorAlert(on: UIApplication.topViewController()!, message: err.localizedDescription)
                 }
