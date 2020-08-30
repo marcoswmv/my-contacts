@@ -14,6 +14,7 @@ class DeletedContactsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     @IBAction func manageOnTouchUpInside(_ sender: Any) {
+        handleManage()
     }
     
     
@@ -39,6 +40,12 @@ class DeletedContactsViewController: UIViewController {
         tableView.isEditing = false
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        isManaging = false
+        navigationController?.setToolbarHidden(true, animated: true)
+    }
 
 //    MARK: - SETUP AND CONFIGURATION
     
@@ -153,10 +160,9 @@ class DeletedContactsViewController: UIViewController {
     }
     
     @objc private func handleDelete() {
-//        TO-DO: First Ask the user if he's sure of this irrevesible action
         if let indexPaths = tableView.indexPathsForSelectedRows {
             for indexPath in indexPaths.reversed() {
-//                dataSource?.deleteSelectedContacts!(indexPath)
+                dataSource?.deleteSelectedContacts!(indexPath)
             }
             updateUIAfterDeletingSelectedContacts()
             setupToolbar()

@@ -19,12 +19,14 @@ class DeletedContactsDataSource: BaseDataSource {
     
     override func setup() {
         super.setup()
-        
+//        TO-DO: After solving the problem down below, I have to implement the day countdown for permanent deletion
+//        Problem: Deletion on selection not working as it should, only one contact is being deleted even with more than one selected. I think it's because of this sparggheti code down below
         self.deleteSelectedContacts = { indexPath in
-            
-//            let contactToDeleteID = self.data![indexPath.section][indexPath.row].contactID
-//            ContactStoreManager.shared.deleteContact(with: contactToDeleteID)
-//            DataBaseManager.shared.setAsDeletedContact(with: contactToDeleteID)
+            Alert.showActionSheetToAskForConfirmationToDelete(on: UIApplication.topViewController()!) { (delete) in
+                let contactToDelete = self.data![indexPath.row]
+                DataBaseManager.shared.delete(contact: contactToDelete)
+                self.tableView.reloadData()
+            }
         }
     }
     
@@ -52,12 +54,11 @@ class DeletedContactsDataSource: BaseDataSource {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
-            
-//            TO-DO: Show alert asking the user if he's sure about the action, because it's going to permanently delete the contact
-            
-//            let contactToDeleteID = data![indexPath.row].contactID
-//            ContactStoreManager.shared.deleteContact(with: contactToDeleteID)
-//            DataBaseManager.shared.setAsDeletedContact(with: contactToDeleteID)
+            Alert.showActionSheetToAskForConfirmationToDelete(on: UIApplication.topViewController()!) { (delete) in
+                let contactToDelete = self.data![indexPath.row]
+                DataBaseManager.shared.delete(contact: contactToDelete)
+                tableView.reloadData()
+            }
         }
     }
     
@@ -87,7 +88,6 @@ class DeletedContactsDataSource: BaseDataSource {
         if isSearching {
             cell.data = filteredData![indexPath.row]
         } else {
-            print(data)
             cell.data = data![indexPath.row]
         }
         
