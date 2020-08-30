@@ -68,7 +68,7 @@ public class DataBaseManager {
     }
     
     func getContacts() -> Results<Contact> {
-        let result = realm.objects(Contact.self).filter("wasDeleted = false").sorted(byKeyPath: "firstName", ascending: true)
+        let result = realm.objects(Contact.self).filter("wasDeleted = false").sorted(byKeyPath: "givenName", ascending: true)
         return result
     }
     
@@ -78,6 +78,7 @@ public class DataBaseManager {
         guard let contact = getContact(identifier) else { return }
         try! realm.write {
             contact.setValue(true, forKey: "wasDeleted")
+            contact.setValue(30, forKey: "daysToDeletion")
         }
     }
     
@@ -87,7 +88,7 @@ public class DataBaseManager {
     }
     
     func filterContacts(from searchTerm: String, wasDeleted: Bool) -> Results<Contact> {
-        let predicate = NSPredicate(format: "firstName CONTAINS %@ AND wasDeleted = %@", argumentArray: [searchTerm, wasDeleted])
-        return realm.objects(Contact.self).filter(predicate).sorted(byKeyPath: "firstName", ascending: true)
+        let predicate = NSPredicate(format: "givenName CONTAINS %@ AND wasDeleted = %@", argumentArray: [searchTerm, wasDeleted])
+        return realm.objects(Contact.self).filter(predicate).sorted(byKeyPath: "givenName", ascending: true)
     }
 }

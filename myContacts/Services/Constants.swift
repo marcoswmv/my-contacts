@@ -16,5 +16,4 @@ struct Constants {
     static let shared = Constants()
     private init() { }
     
-    let indexTitles = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 }

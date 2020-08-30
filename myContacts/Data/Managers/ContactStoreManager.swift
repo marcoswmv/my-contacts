@@ -42,7 +42,7 @@ public struct ContactStoreManager {
                     
                     do {
                         try self.store.enumerateContacts(with: request, usingBlock: { (contact, stopPointerIfYouWantToStopEnumerating) in
-                            let contact = Contact(contact: contact, wasDeleted: false)
+                            let contact = Contact(contact: contact)
                             completionHandler(contact, nil)
                         })
                     } catch {

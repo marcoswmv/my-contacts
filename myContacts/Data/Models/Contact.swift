@@ -13,11 +13,12 @@ import RealmSwift
 class Contact: Object {
     
     @objc dynamic var contactID = ""
-    @objc dynamic var firstName = ""
+    @objc dynamic var givenName = ""
     @objc dynamic var familyName = ""
     @objc dynamic var thumbnailPhoto = Data()
     @objc dynamic var imageDataAvailable = false
     @objc dynamic var wasDeleted = false
+    @objc dynamic var daysToDeletion = 0
     
     let phoneNumbersLabels = List<String>()
     let phoneNumbers = List<String>()
@@ -33,14 +34,15 @@ class Contact: Object {
         return "contactID"
     }
     
-    convenience init(contact: CNContact, wasDeleted: Bool) {
+    convenience init(contact: CNContact) {
         self.init()
         self.contactID = contact.identifier
-        self.firstName = contact.givenName != "" ? contact.givenName : contact.organizationName
+        self.givenName = contact.givenName != "" ? contact.givenName : contact.organizationName
         self.familyName = contact.familyName
         self.imageDataAvailable = contact.imageDataAvailable
         self.thumbnailPhoto = (self.imageDataAvailable ? contact.thumbnailImageData! : Data())
-        self.wasDeleted = wasDeleted
+        self.wasDeleted = false
+        self.daysToDeletion = 0
         
         for contact in contact.phoneNumbers {
             self.phoneNumbersLabels.append(contact.label?.description ?? "Mobile")
@@ -52,8 +54,4 @@ class Contact: Object {
             self.emails.append(email.value as String)
         }
     }
-    
-//    deinit {
-//        print("\(self) is being deinitialized!")
-//    }
 }

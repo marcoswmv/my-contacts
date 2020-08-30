@@ -79,10 +79,11 @@ class ContactsDataSource: BaseDataSource {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        
         if isSearching {
             return nil
         } else {
-            return sectionTitles[section]
+            return sectionTitles.isEmpty ? nil : sectionTitles[section]
         }
     }
     
@@ -90,7 +91,7 @@ class ContactsDataSource: BaseDataSource {
         if isSearching {
             return nil
         } else {
-            return sectionTitles
+            return sectionTitles.isEmpty ? nil : sectionTitles
         }
     }
     
@@ -143,7 +144,7 @@ class ContactsDataSource: BaseDataSource {
     fileprivate func generateSectionTitles(from contacts: Results<Contact>, isSearching: Bool) {
 
         for contact in contacts {
-            let letter = String(contact.firstName.prefix(1))
+            let letter = String(contact.givenName.prefix(1))
             if !isSearching {
                 if !sectionTitles.contains(letter) {
                     sectionTitles.append(letter)
@@ -160,7 +161,7 @@ class ContactsDataSource: BaseDataSource {
         for letter in sectionTitles {
             var section = [Contact]()
             for contact in contacts {
-                if contact.firstName.prefix(1).contains(letter) {
+                if contact.givenName.prefix(1).contains(letter) {
                     section.append(contact)
                 }
             }
