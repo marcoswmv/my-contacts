@@ -16,8 +16,17 @@ class ContactsDataSource: BaseDataSource {
     private var sectionTitles: [String] = [String]()
     private var isSearching: Bool = false
     
+    var deleteSelectedContacts: ((_ indexPath: IndexPath) -> Void)?
+    
     override func setup() {
         super.setup()
+        
+        self.deleteSelectedContacts = { indexPath in
+            let contactToDeleteID = self.data![indexPath.section][indexPath.row].contactID
+            ContactStoreManager.shared.deleteContact(with: contactToDeleteID)
+            DataBaseManager.shared.setAsDeletedContact(with: contactToDeleteID)
+            self.removeEmptySection(indexPath, self.tableView)
+        }
     }
     
     override func reload() {
@@ -141,7 +150,6 @@ class ContactsDataSource: BaseDataSource {
                 }
             }
         }
-        
         sectionTitles = sectionTitles.sorted(by: { $0 < $1 })
     }
     

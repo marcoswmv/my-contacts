@@ -75,8 +75,6 @@ public struct ContactStoreManager {
                 request.delete(mutableContact)
                 do {
                     try store.execute(request)
-                    
-                    print("The contact was successfully deleted!")
                 } catch let err {
                     Alert.showErrorAlert(on: UIApplication.topViewController()!, message: err.localizedDescription)
                 }

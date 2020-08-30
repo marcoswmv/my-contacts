@@ -109,6 +109,14 @@ class ContactsViewController: BaseViewController {
         toolbarItems = [cancelButton, flexibleSpace, deleteButton]
     }
     
+    fileprivate func updateUIAfterDeletingSelectedContacts() {
+        navigationController?.setToolbarHidden(true, animated: true)
+        navigationItem.rightBarButtonItem?.isEnabled = true
+        navigationItem.leftBarButtonItem?.isEnabled = true
+        tableView.setEditing(false, animated: true)
+        tableView.isEditing = false
+    }
+    
     
 //    MARK: - HANDLERS
     
@@ -159,7 +167,13 @@ class ContactsViewController: BaseViewController {
     }
     
     @objc private func handleDelete() {
-        print("Handling deletion")
+        if let indexPaths = tableView.indexPathsForSelectedRows {
+            for indexPath in indexPaths.reversed() {
+                dataSource?.deleteSelectedContacts!(indexPath)
+            }
+            updateUIAfterDeletingSelectedContacts()
+            setupToolbar()
+        }
     }
     
 }
