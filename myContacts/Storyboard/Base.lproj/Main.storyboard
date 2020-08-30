@@ -20,23 +20,23 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ContactCell" id="OUT-jt-npy" customClass="ContactCell" customModule="myContacts" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OUT-jt-npy" id="GnE-1b-7dS">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="KLI-5f-OfP">
-                                                    <rect key="frame" x="20" y="11.5" width="194.5" height="20.5"/>
+                                                    <rect key="frame" x="20" y="11.5" width="194.5" height="21"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Given name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="18S-ir-Lsa">
-                                                            <rect key="frame" x="0.0" y="0.0" width="90.5" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="90.5" height="21"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Family name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Hl-g4-Bbw">
-                                                            <rect key="frame" x="94.5" y="0.0" width="100" height="20.5"/>
+                                                            <rect key="frame" x="94.5" y="0.0" width="100" height="21"/>
                                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -45,7 +45,8 @@
                                                 </stackView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="KLI-5f-OfP" firstAttribute="centerY" secondItem="GnE-1b-7dS" secondAttribute="centerY" id="e9w-Tt-DTE"/>
+                                                <constraint firstItem="KLI-5f-OfP" firstAttribute="top" secondItem="GnE-1b-7dS" secondAttribute="top" constant="11.5" id="ID6-Zx-qre"/>
+                                                <constraint firstAttribute="bottom" secondItem="KLI-5f-OfP" secondAttribute="bottom" constant="11.5" id="P71-cO-ROB"/>
                                                 <constraint firstItem="KLI-5f-OfP" firstAttribute="leading" secondItem="GnE-1b-7dS" secondAttribute="leading" constant="20" id="hGP-aL-aHs"/>
                                             </constraints>
                                         </tableViewCellContentView>

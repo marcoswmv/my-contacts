@@ -62,17 +62,10 @@ class ContactsDataSource: BaseDataSource {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            
             let contactToDeleteID = data![indexPath.section][indexPath.row].contactID
             ContactStoreManager.shared.deleteContact(with: contactToDeleteID)
             DataBaseManager.shared.setAsDeletedContact(with: contactToDeleteID)
-            
-//            Current problem: Clear section header in case there isn't any contacts. If I delete all the contacts from a section, the section bellow is hidden as well
-//            Possible solution: in the first app I've just hidden the letter if it wasn't any contact in the section. Look at titleForHeaderInSection method
-            if data![indexPath.section].isEmpty {
-                sectionTitles.remove(at: indexPath.section)
-                tableView.reloadData()
-            }
+            removeEmptySection(indexPath, tableView)
         }
     }
     
@@ -80,7 +73,7 @@ class ContactsDataSource: BaseDataSource {
         if isSearching {
             return nil
         } else {
-            return data![section].isEmpty ? nil : sectionTitles[section]
+            return sectionTitles[section]
         }
     }
     
@@ -88,7 +81,6 @@ class ContactsDataSource: BaseDataSource {
         if isSearching {
             return nil
         } else {
-            
             return sectionTitles
         }
     }
@@ -131,6 +123,14 @@ class ContactsDataSource: BaseDataSource {
     
 //    MARK: - Helper methods
 
+    fileprivate func removeEmptySection(_ indexPath: IndexPath, _ tableView: UITableView) {
+        if data![indexPath.section].isEmpty {
+            sectionTitles.remove(at: indexPath.section)
+            data?.remove(at: indexPath.section)
+            tableView.reloadData()
+        }
+    }
+    
     fileprivate func generateSectionTitles(from contacts: Results<Contact>, isSearching: Bool) {
 
         for contact in contacts {
