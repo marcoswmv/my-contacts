@@ -14,7 +14,6 @@ class ContactsDataSource: BaseDataSource {
     private(set) var data: [[Contact]]?
     private var filteredData: Results<Contact>?
     private var sectionTitles: [String] = [String]()
-//    private var filteredSectionTitles: [String] = [String]()
     private var isSearching: Bool = false
     
     override func setup() {
@@ -69,6 +68,7 @@ class ContactsDataSource: BaseDataSource {
             DataBaseManager.shared.setAsDeletedContact(with: contactToDeleteID)
             
 //            Current problem: Clear section header in case there isn't any contacts. If I delete all the contacts from a section, the section bellow is hidden as well
+//            Possible solution: in the first app I've just hidden the letter if it wasn't any contact in the section. Look at titleForHeaderInSection method
             if data![indexPath.section].isEmpty {
                 sectionTitles.remove(at: indexPath.section)
                 tableView.reloadData()
