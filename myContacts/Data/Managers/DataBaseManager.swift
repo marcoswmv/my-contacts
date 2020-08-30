@@ -67,8 +67,9 @@ public class DataBaseManager {
         }
     }
     
-    func getContacts() -> Results<Contact> {
-        let result = realm.objects(Contact.self).filter("wasDeleted = false").sorted(byKeyPath: "givenName", ascending: true)
+    func getContacts(wasDeleted: Bool = false) -> Results<Contact> {
+        let predicate = NSPredicate(format: "wasDeleted = %@", argumentArray: [wasDeleted])
+        let result = realm.objects(Contact.self).filter(predicate).sorted(byKeyPath: "givenName", ascending: true)
         return result
     }
     
