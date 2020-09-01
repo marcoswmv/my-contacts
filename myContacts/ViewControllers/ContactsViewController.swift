@@ -40,6 +40,12 @@ class ContactsViewController: BaseViewController {
         tableView.isEditing = false
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        dataSource?.reload()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         

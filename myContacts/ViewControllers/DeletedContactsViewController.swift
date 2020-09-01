@@ -44,6 +44,7 @@ class DeletedContactsViewController: UIViewController {
         
         isManaging = false
         navigationController?.setToolbarHidden(true, animated: true)
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
 
 //    MARK: - SETUP AND CONFIGURATION
@@ -63,7 +64,7 @@ class DeletedContactsViewController: UIViewController {
     
     fileprivate func setupNavigationBar() {
         navigationItem.title = "Deleted"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         navigationController?.navigationBar.shadowImage = nil
         
@@ -86,7 +87,7 @@ class DeletedContactsViewController: UIViewController {
     
     fileprivate func setupToolbar() {
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let restoreButton = UIBarButtonItem(title: "Restore", style: .done, target: self, action: #selector(handleRecover))
+        let restoreButton = UIBarButtonItem(title: "Restore", style: .done, target: self, action: #selector(handleRestore))
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleDone))
         let deleteButton = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(handleDelete))
         
@@ -126,8 +127,15 @@ class DeletedContactsViewController: UIViewController {
         tableView.isEditing = false
     }
     
-    @objc private func handleRecover() {
-        print("Handling recovery")
+    @objc private func handleRestore() {
+        if let indexPaths = tableView.indexPathsForSelectedRows {
+            var contactsToDeleteIndexPaths = [IndexPath]()
+            for indexPath in indexPaths.reversed() {
+                contactsToDeleteIndexPaths.append(indexPath)
+            }
+            dataSource?.restoreSelectedContacts!(contactsToDeleteIndexPaths)
+            setupToolbar()
+        }
     }
     
     @objc private func handleDelete() {

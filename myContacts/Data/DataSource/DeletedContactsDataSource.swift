@@ -16,6 +16,7 @@ class DeletedContactsDataSource: BaseDataSource {
     private var isSearching: Bool = false
     
     var deleteSelectedContacts: ((_ indexPaths: [IndexPath]) -> Void)?
+    var restoreSelectedContacts: ((_ indexPaths: [IndexPath]) -> Void)?
     
     override func setup() {
         super.setup()
@@ -31,6 +32,18 @@ class DeletedContactsDataSource: BaseDataSource {
                 DataBaseManager.shared.delete(contacts: contactsToDelete)
                 self.tableView.reloadData()
             }
+        }
+        
+        self.restoreSelectedContacts = { [weak self] indexPaths in
+            
+            guard let self = self else { return }
+            var contactsRestore = [Contact]()
+            for indexPathToRestore in indexPaths {
+                contactsRestore.append(self.data![indexPathToRestore.row])
+            }
+            _ = contactsRestore.map({ ContactStoreManager.shared.addContact($0) })
+            DataBaseManager.shared.delete(contacts: contactsRestore)
+            self.tableView.reloadData()
         }
     }
     
@@ -69,11 +82,11 @@ class DeletedContactsDataSource: BaseDataSource {
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let restoreAction = UIContextualAction(style: .normal, title: "Restore") { [weak self] (action, view, completionHandler) in
-            print("Restoring contact...")
+            
             guard let self = self else { return }
             let contactToRestore = self.data![indexPath.row]
             ContactStoreManager.shared.addContact(contactToRestore)
-            DataBaseManager.shared.unsetAsDeleted(contact: contactToRestore)
+            DataBaseManager.shared.delete(contacts: [contactToRestore])
             self.tableView.reloadData()
             completionHandler(true)
         }
