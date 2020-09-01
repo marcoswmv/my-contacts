@@ -51,12 +51,12 @@ class DeletedContactsViewController: UIViewController {
     
     fileprivate func setupDataSource() {
         dataSource = DeletedContactsDataSource(tableView: tableView)
-        dataSource?.onLoading = { (isLoading) in
+        dataSource?.onLoading = { [weak self] (isLoading) in
 //            TO-DO: Implement loading animation
-//            self.displayLoading(loading: isLoading)
+//            self!.displayLoading(loading: isLoading)
         }
-        dataSource?.onError = { (error) in
-            Alert.showErrorAlert(on: self, message: error.localizedDescription)
+        dataSource?.onError = { [weak self] (error) in
+            Alert.showErrorAlert(on: self!, message: error.localizedDescription)
         }
         dataSource?.reload()
     }
