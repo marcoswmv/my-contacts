@@ -15,23 +15,27 @@ class DeletedContactsDataSource: BaseDataSource {
     private var filteredData: Results<Contact>?
     private var isSearching: Bool = false
     
-    var deleteSelectedContacts: ((_ indexPath: IndexPath) -> Void)?
+    var deleteSelectedContacts: ((_ indexPaths: [IndexPath]) -> Void)?
     
     override func setup() {
         super.setup()
-//        TO-DO: After solving the problem down below, I have to implement the day countdown for permanent deletion
-//        Problem: Deletion on selection not working as it should, only one contact is being deleted even with more than one selected. I think it's because of this sparggheti code down below
-        self.deleteSelectedContacts = { indexPath in
-            Alert.showActionSheetToAskForConfirmationToDelete(on: UIApplication.topViewController()!) { (delete) in
-                let contactToDelete = self.data![indexPath.row]
-                DataBaseManager.shared.delete(contact: contactToDelete)
+        
+        self.deleteSelectedContacts = { [weak self] indexPaths in
+            guard let self = self else { return }
+            var contactsToDelete = [Contact]()
+            for indexPathToDelete in indexPaths {
+                contactsToDelete.append(self.data![indexPathToDelete.row])
+            }
+            Alert.showActionSheetToAskForConfirmationToDelete(on: UIApplication.topViewController()!) { [weak self] (delete) in
+                guard let self = self else { return }
+                DataBaseManager.shared.delete(contacts: contactsToDelete)
                 self.tableView.reloadData()
             }
         }
     }
     
     override func reload() {
-        onLoading!(true)
+//        onLoading!(true)
         
         let result = DataBaseManager.shared.getContacts(wasDeleted: true)
         data = result
@@ -54,9 +58,10 @@ class DeletedContactsDataSource: BaseDataSource {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
-            Alert.showActionSheetToAskForConfirmationToDelete(on: UIApplication.topViewController()!) { (delete) in
-                let contactToDelete = self.data![indexPath.row]
-                DataBaseManager.shared.delete(contact: contactToDelete)
+            Alert.showActionSheetToAskForConfirmationToDelete(on: UIApplication.topViewController()!) { [weak self] delete in
+                guard let self = self else { return }
+                let contactToDelete = [self.data![indexPath.row]]
+                DataBaseManager.shared.delete(contacts: contactToDelete)
                 tableView.reloadData()
             }
         }

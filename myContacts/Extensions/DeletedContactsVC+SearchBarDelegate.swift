@@ -45,7 +45,8 @@ extension DeletedContactsViewController: UISearchBarDelegate {
     
     fileprivate func searchIfNedded(query: String?) {
         cancelSearchTimer()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (timer) in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { [weak self] (timer) in
+            guard let self = self else { return }
             self.search(query: query)
         })
     }

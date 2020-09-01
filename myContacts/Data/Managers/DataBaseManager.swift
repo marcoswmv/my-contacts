@@ -24,7 +24,8 @@ public class DataBaseManager {
     static let shared = DataBaseManager()
     private init() {
         let realm = try! Realm()
-        token = realm.observe { (notification, realm) in
+        token = realm.observe { [weak self] (notification, realm) in
+            guard let self = self else { return }
             if let change = self.dataChanged {
                 change(self.getContacts())
             }
@@ -36,8 +37,8 @@ public class DataBaseManager {
     }
     
     func fetchContacts(completionHandler: @escaping ContactsFetchingCompletionHandler) {
-        ContactStoreManager.shared.requestContacts { (contact, error) in
-            
+        ContactStoreManager.shared.requestContacts { [weak self] (contact, error) in
+            guard let self = self else { return }
             if error != nil {
                 completionHandler(nil, error)
             } else {
@@ -61,9 +62,9 @@ public class DataBaseManager {
     }
     
 /// This method is used to permanently delete the contact from the database. And the contact is not restorable anymore.
-    func delete(contact: Contact) {
+    func delete(contacts: [Contact]) {
         try! realm.write {
-            realm.delete(contact)
+            realm.delete(contacts)
         }
     }
     
@@ -91,5 +92,18 @@ public class DataBaseManager {
     func filterContacts(from searchTerm: String, wasDeleted: Bool) -> Results<Contact> {
         let predicate = NSPredicate(format: "givenName CONTAINS %@ AND wasDeleted = %@", argumentArray: [searchTerm, wasDeleted])
         return realm.objects(Contact.self).filter(predicate).sorted(byKeyPath: "givenName", ascending: true)
+    }
+    
+    
+//    TO-DO:
+//    1 - Find a way of retrieving the deletion date and calculated permanent deletion date to update the database with the left days
+//    2 - Find a place in code to make this update everytime the app is launched. TIP: Maybe in some AppDelegate method!
+    func daysUntilPermanentDeletion() -> Int? {
+        let calendar = Calendar.current
+        let today = Date()
+        let thirtyDaysAfter = calendar.date(byAdding: .day, value: 30, to: today)
+        let daysUntilDeletion = calendar.dateComponents([.day], from: today, to: thirtyDaysAfter!).day
+        
+        return daysUntilDeletion
     }
 }

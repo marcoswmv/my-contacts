@@ -21,7 +21,8 @@ class ContactsDataSource: BaseDataSource {
     override func setup() {
         super.setup()
         
-        self.deleteSelectedContacts = { indexPath in
+        self.deleteSelectedContacts = { [weak self] indexPath in
+            guard let self = self else { return }
             let contactToDeleteID = self.data![indexPath.section][indexPath.row].contactID
             ContactStoreManager.shared.deleteContact(with: contactToDeleteID)
             DataBaseManager.shared.setAsDeletedContact(with: contactToDeleteID)
@@ -30,10 +31,11 @@ class ContactsDataSource: BaseDataSource {
     }
     
     override func reload() {
-        onLoading!(true)
+//        onLoading!(true)
         
-        DataBaseManager.shared.fetchContacts { (result, error) in
-            self.onLoading!(false)
+        DataBaseManager.shared.fetchContacts { [weak self] (result, error) in
+            guard let self = self else { return }
+//            self.onLoading!(false)
             if error != nil {
                 self.onError?(error!)
             } else {
@@ -45,7 +47,8 @@ class ContactsDataSource: BaseDataSource {
 //        Refactor this peace of code in the future because i'm not
 //        sure if it's a good practice to call twice the "populateData()" method in the same function.
 //        NOTE: This solved the problem of updating the table with new contact on launch and on pull to refresh.
-        DataBaseManager.shared.dataChanged = { result in
+        DataBaseManager.shared.dataChanged = { [weak self] result in
+            guard let self = self else { return }
             self.updateData(with: result)
         }
     }
@@ -175,9 +178,9 @@ class ContactsDataSource: BaseDataSource {
         generateSectionTitles(from: contacts, isSearching: isSearching)
         
         if isSearching {
-            self.filteredData = contacts
+            filteredData = contacts
         } else {
-            self.data = groupContactsInData(by: sectionTitles, contacts)
+            data = groupContactsInData(by: sectionTitles, contacts)
         }
     }
 }
