@@ -4,9 +4,10 @@
 
 An app that enables the user to manage his contacts with actions such as delete and recover deleted contacts, add and change contacts.
 
-![](marcoswmv/media/myContacts.gif)
+![](media/myContacts.gif)
 
 ## 💻 Tech
 
 - Swift
 - Xcode
+- Realm
