@@ -15,21 +15,40 @@ class DeletedContactsDataSource: BaseDataSource {
     private var filteredData: Results<Contact>?
     private var isSearching: Bool = false
     
-    var deleteSelectedContacts: ((_ indexPath: IndexPath) -> Void)?
+    var deleteSelectedContacts: ((_ indexPaths: [IndexPath]) -> Void)?
+    var restoreSelectedContacts: ((_ indexPaths: [IndexPath]) -> Void)?
     
     override func setup() {
         super.setup()
         
-        self.deleteSelectedContacts = { indexPath in
+        self.deleteSelectedContacts = { [weak self] indexPaths in
+            guard let self = self else { return }
+            var contactsToDelete = [Contact]()
+            for indexPathToDelete in indexPaths {
+                contactsToDelete.append(self.data![indexPathToDelete.row])
+            }
+            Alert.showActionSheetToAskForConfirmationToDelete(on: UIApplication.topViewController()!) { [weak self] (delete) in
+                guard let self = self else { return }
+                DataBaseManager.shared.delete(contacts: contactsToDelete)
+                self.tableView.reloadData()
+            }
+        }
+        
+        self.restoreSelectedContacts = { [weak self] indexPaths in
             
-//            let contactToDeleteID = self.data![indexPath.section][indexPath.row].contactID
-//            ContactStoreManager.shared.deleteContact(with: contactToDeleteID)
-//            DataBaseManager.shared.setAsDeletedContact(with: contactToDeleteID)
+            guard let self = self else { return }
+            var contactsRestore = [Contact]()
+            for indexPathToRestore in indexPaths {
+                contactsRestore.append(self.data![indexPathToRestore.row])
+            }
+            _ = contactsRestore.map({ ContactStoreManager.shared.addContact($0) })
+            DataBaseManager.shared.delete(contacts: contactsRestore)
+            self.tableView.reloadData()
         }
     }
     
     override func reload() {
-        onLoading!(true)
+//        onLoading!(true)
         
         let result = DataBaseManager.shared.getContacts(wasDeleted: true)
         data = result
@@ -52,13 +71,27 @@ class DeletedContactsDataSource: BaseDataSource {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
-            
-//            TO-DO: Show alert asking the user if he's sure about the action, because it's going to permanently delete the contact
-            
-//            let contactToDeleteID = data![indexPath.row].contactID
-//            ContactStoreManager.shared.deleteContact(with: contactToDeleteID)
-//            DataBaseManager.shared.setAsDeletedContact(with: contactToDeleteID)
+            Alert.showActionSheetToAskForConfirmationToDelete(on: UIApplication.topViewController()!) { [weak self] delete in
+                guard let self = self else { return }
+                let contactToDelete = [self.data![indexPath.row]]
+                DataBaseManager.shared.delete(contacts: contactToDelete)
+                tableView.reloadData()
+            }
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let restoreAction = UIContextualAction(style: .normal, title: "Restore") { [weak self] (action, view, completionHandler) in
+            
+            guard let self = self else { return }
+            let contactToRestore = self.data![indexPath.row]
+            ContactStoreManager.shared.addContact(contactToRestore)
+            DataBaseManager.shared.delete(contacts: [contactToRestore])
+            self.tableView.reloadData()
+            completionHandler(true)
+        }
+        restoreAction.backgroundColor = .link
+        return UISwipeActionsConfiguration(actions: [restoreAction])
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -87,7 +120,6 @@ class DeletedContactsDataSource: BaseDataSource {
         if isSearching {
             cell.data = filteredData![indexPath.row]
         } else {
-            print(data)
             cell.data = data![indexPath.row]
         }
         

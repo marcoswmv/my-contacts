@@ -14,8 +14,8 @@ class DeletedContactsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     @IBAction func manageOnTouchUpInside(_ sender: Any) {
+        handleManage()
     }
-    
     
 //    MARK: - PROPERTIES
     
@@ -39,16 +39,24 @@ class DeletedContactsViewController: UIViewController {
         tableView.isEditing = false
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        isManaging = false
+        navigationController?.setToolbarHidden(true, animated: true)
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
 
 //    MARK: - SETUP AND CONFIGURATION
     
     fileprivate func setupDataSource() {
         dataSource = DeletedContactsDataSource(tableView: tableView)
-        dataSource?.onLoading = { (isLoading) in
+//        dataSource?.onLoading = { [weak self] (isLoading) in
 //            TO-DO: Implement loading animation
-//            self.displayLoading(loading: isLoading)
-        }
-        dataSource?.onError = { (error) in
+//            self!.displayLoading(loading: isLoading)
+//        }
+        dataSource?.onError = { [weak self] (error) in
+            guard let self = self else { return }
             Alert.showErrorAlert(on: self, message: error.localizedDescription)
         }
         dataSource?.reload()
@@ -56,7 +64,7 @@ class DeletedContactsViewController: UIViewController {
     
     fileprivate func setupNavigationBar() {
         navigationItem.title = "Deleted"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         navigationController?.navigationBar.shadowImage = nil
         
@@ -79,33 +87,15 @@ class DeletedContactsViewController: UIViewController {
     
     fileprivate func setupToolbar() {
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let selectButton = UIBarButtonItem(title: "Select", style: .done, target: self, action: #selector(handleSelect))
+        let restoreButton = UIBarButtonItem(title: "Restore", style: .done, target: self, action: #selector(handleRestore))
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleDone))
+        let deleteButton = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(handleDelete))
         
         if !(toolbarItems?.isEmpty ?? true) {
             toolbarItems?.removeAll()
         }
 
-        toolbarItems = [flexibleSpace, selectButton]
-    }
-    
-    fileprivate func setupToolbarForDeletion() {
-        if !toolbarItems!.isEmpty {
-            toolbarItems?.removeAll()
-        }
-        
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(handleCancel))
-        let deleteButton = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(handleDelete))
-
-        toolbarItems = [cancelButton, flexibleSpace, deleteButton]
-    }
-    
-    fileprivate func updateUIAfterDeletingSelectedContacts() {
-        navigationController?.setToolbarHidden(true, animated: true)
-        navigationItem.rightBarButtonItem?.isEnabled = true
-        navigationItem.leftBarButtonItem?.isEnabled = true
-        tableView.setEditing(false, animated: true)
-        tableView.isEditing = false
+        toolbarItems = [restoreButton, flexibleSpace, doneButton, flexibleSpace, deleteButton]
     }
 
 //    MARK: - HANDLERS
@@ -119,46 +109,42 @@ class DeletedContactsViewController: UIViewController {
     }
     
     @objc private func handleManage() {
-        if isManaging {
-            isManaging = false
-            navigationController?.setToolbarHidden(true, animated: true)
-        } else {
-            isManaging = true
-            navigationController?.setToolbarHidden(false, animated: true)
-        }
-    }
-    
-    @objc private func handleSelect() {
-        setupToolbarForDeletion()
         navigationItem.rightBarButtonItem?.isEnabled = false
-        navigationItem.leftBarButtonItem?.isEnabled = false
-        
+
+        isManaging = true
+        navigationController?.setToolbarHidden(false, animated: true)
         tableView.allowsMultipleSelectionDuringEditing = true
-        
-        if tableView.isEditing {
-            tableView.setEditing(tableView.isEditing, animated: true)
-            tableView.isEditing = false
-        } else {
-            tableView.setEditing(tableView.isEditing, animated: true)
-            tableView.isEditing = true
-        }
+        tableView.setEditing(true, animated: true)
+        tableView.isEditing = true
     }
     
-    @objc private func handleCancel() {
+    @objc private func handleDone() {
         navigationItem.rightBarButtonItem?.isEnabled = true
-        navigationItem.leftBarButtonItem?.isEnabled = true
+        
+        isManaging = false
+        navigationController?.setToolbarHidden(true, animated: true)
         tableView.setEditing(false, animated: true)
         tableView.isEditing = false
-        setupToolbar()
+    }
+    
+    @objc private func handleRestore() {
+        if let indexPaths = tableView.indexPathsForSelectedRows {
+            var contactsToDeleteIndexPaths = [IndexPath]()
+            for indexPath in indexPaths.reversed() {
+                contactsToDeleteIndexPaths.append(indexPath)
+            }
+            dataSource?.restoreSelectedContacts!(contactsToDeleteIndexPaths)
+            setupToolbar()
+        }
     }
     
     @objc private func handleDelete() {
-//        TO-DO: First Ask the user if he's sure of this irrevesible action
         if let indexPaths = tableView.indexPathsForSelectedRows {
+            var contactsToDeleteIndexPaths = [IndexPath]()
             for indexPath in indexPaths.reversed() {
-//                dataSource?.deleteSelectedContacts!(indexPath)
+                contactsToDeleteIndexPaths.append(indexPath)
             }
-            updateUIAfterDeletingSelectedContacts()
+            dataSource?.deleteSelectedContacts!(contactsToDeleteIndexPaths)
             setupToolbar()
         }
     }

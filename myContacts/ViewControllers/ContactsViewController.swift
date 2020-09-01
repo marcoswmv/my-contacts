@@ -40,6 +40,12 @@ class ContactsViewController: BaseViewController {
         tableView.isEditing = false
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        dataSource?.reload()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -52,11 +58,12 @@ class ContactsViewController: BaseViewController {
     
     fileprivate func setupDataSource() {
         dataSource = ContactsDataSource(tableView: tableView)
-        dataSource?.onLoading = { (isLoading) in
+//        dataSource?.onLoading = { [weak self] (isLoading) in
 //            TO-DO: Implement loading animation
 //            self.displayLoading(loading: isLoading)
-        }
-        dataSource?.onError = { (error) in
+//        }
+        dataSource?.onError = { [weak self] (error) in
+            guard let self = self else { return }
             Alert.showErrorAlert(on: self, message: error.localizedDescription)
         }
         dataSource?.reload()
@@ -87,34 +94,15 @@ class ContactsViewController: BaseViewController {
     
     fileprivate func setupToolbar() {
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAdd))
-        let selectButton = UIBarButtonItem(title: "Select", style: .done, target: self, action: #selector(handleSelect))
+        let addButton = UIBarButtonItem(title: "Add", style: .done, target: self, action: #selector(handleAdd))
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleDone))
+        let deleteButton = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(handleDelete))
         
         if !(toolbarItems?.isEmpty ?? true) {
             toolbarItems?.removeAll()
         }
 
-        toolbarItems = [addButton, flexibleSpace, selectButton]
-    }
-    
-    fileprivate func setupToolbarForDeletion() {
-        if !toolbarItems!.isEmpty {
-            toolbarItems?.removeAll()
-        }
-        
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(handleCancel))
-        let deleteButton = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(handleDelete))
-
-        toolbarItems = [cancelButton, flexibleSpace, deleteButton]
-    }
-    
-    fileprivate func updateUIAfterDeletingSelectedContacts() {
-        navigationController?.setToolbarHidden(true, animated: true)
-        navigationItem.rightBarButtonItem?.isEnabled = true
-        navigationItem.leftBarButtonItem?.isEnabled = true
-        tableView.setEditing(false, animated: true)
-        tableView.isEditing = false
+        toolbarItems = [addButton, flexibleSpace, doneButton, flexibleSpace, deleteButton]
     }
     
     
@@ -129,41 +117,28 @@ class ContactsViewController: BaseViewController {
     }
     
     @objc private func handleManage() {
-        if isManaging {
-            isManaging = false
-            navigationController?.setToolbarHidden(true, animated: true)
-        } else {
-            isManaging = true
-            navigationController?.setToolbarHidden(false, animated: true)
-        }
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        navigationItem.leftBarButtonItem?.isEnabled = false
+
+        isManaging = true
+        navigationController?.setToolbarHidden(false, animated: true)
+        tableView.allowsMultipleSelectionDuringEditing = true
+        tableView.setEditing(true, animated: true)
+        tableView.isEditing = true
+    }
+    
+    @objc private func handleDone() {
+        navigationItem.rightBarButtonItem?.isEnabled = true
+        navigationItem.leftBarButtonItem?.isEnabled = true
+        
+        isManaging = false
+        navigationController?.setToolbarHidden(true, animated: true)
+        tableView.setEditing(false, animated: true)
+        tableView.isEditing = false
     }
     
     @objc private func handleAdd() {
         print("Handling addition")
-    }
-    
-    @objc private func handleSelect() {
-        setupToolbarForDeletion()
-        navigationItem.rightBarButtonItem?.isEnabled = false
-        navigationItem.leftBarButtonItem?.isEnabled = false
-        
-        tableView.allowsMultipleSelectionDuringEditing = true
-        
-        if tableView.isEditing {
-            tableView.setEditing(tableView.isEditing, animated: true)
-            tableView.isEditing = false
-        } else {
-            tableView.setEditing(tableView.isEditing, animated: true)
-            tableView.isEditing = true
-        }
-    }
-    
-    @objc private func handleCancel() {
-        navigationItem.rightBarButtonItem?.isEnabled = true
-        navigationItem.leftBarButtonItem?.isEnabled = true
-        tableView.setEditing(false, animated: true)
-        tableView.isEditing = false
-        setupToolbar()
     }
     
     @objc private func handleDelete() {
@@ -171,7 +146,6 @@ class ContactsViewController: BaseViewController {
             for indexPath in indexPaths.reversed() {
                 dataSource?.deleteSelectedContacts!(indexPath)
             }
-            updateUIAfterDeletingSelectedContacts()
             setupToolbar()
         }
     }
