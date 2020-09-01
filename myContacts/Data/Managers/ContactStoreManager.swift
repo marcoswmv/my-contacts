@@ -73,6 +73,7 @@ public struct ContactStoreManager {
                 let mutableContact = contact.mutableCopy() as! CNMutableContact
                 
                 request.delete(mutableContact)
+                
                 do {
                     try store.execute(request)
                 } catch let err {
@@ -81,6 +82,39 @@ public struct ContactStoreManager {
             } catch let error {
                 Alert.showErrorAlert(on: UIApplication.topViewController()!, message: error.localizedDescription)
             }
+        }
+    }
+    
+    func addContact( _ contact: Contact) {
+        // Create a new contact
+        let newContact = CNMutableContact()
+        newContact.givenName = contact.givenName
+        newContact.familyName = contact.familyName
+        
+        // Store the profile picture as data
+        let image = UIImage(data:  contact.thumbnailPhoto)
+        newContact.imageData = image?.jpegData(compressionQuality: 1.0)
+        
+        for (label, phoneNumber) in zip(contact.phoneNumbersLabels, contact.phoneNumbers) {
+            newContact.phoneNumbers.append(CNLabeledValue(
+                                            label: label,
+                                            value: CNPhoneNumber(stringValue: phoneNumber)))
+        }
+        
+        for (label, email) in zip(contact.emailsLabels, contact.emails) {
+            newContact.phoneNumbers.append(CNLabeledValue(
+                                            label: label,
+                                            value: CNPhoneNumber(stringValue: email as String)))
+        }
+
+        // Save the contact
+        let saveRequest = CNSaveRequest()
+        saveRequest.add(newContact, toContainerWithIdentifier: nil)
+
+        do {
+            try store.execute(saveRequest)
+        } catch {
+            Alert.showErrorAlert(on: UIApplication.topViewController()!, message: error.localizedDescription)
         }
     }
 }

@@ -76,11 +76,19 @@ public class DataBaseManager {
     
 /// This method is used to set the contact as deleted.
 /// The contact is removed instantly from user's native "Contacts" App but it's stored in the database for later use (restoration).
-    func setAsDeletedContact(with identifier: String) {
-        guard let contact = getContact(identifier) else { return }
+    func setAsDeleted(contact: Contact) {
         try! realm.write {
             contact.setValue(true, forKey: "wasDeleted")
             contact.setValue(30, forKey: "daysToDeletion")
+        }
+    }
+    
+/// This method is used to unset the contact as deleted.
+/// This is done after the contact is restored to user's native "Contacts" App
+    func unsetAsDeleted(contact: Contact) {
+        try! realm.write {
+            contact.setValue(false, forKey: "wasDeleted")
+            contact.setValue(0, forKey: "daysToDeletion")
         }
     }
     

@@ -86,7 +86,7 @@ class DeletedContactsViewController: UIViewController {
     
     fileprivate func setupToolbar() {
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let recoverButton = UIBarButtonItem(title: "Recover", style: .done, target: self, action: #selector(handleRecover))
+        let restoreButton = UIBarButtonItem(title: "Restore", style: .done, target: self, action: #selector(handleRecover))
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleDone))
         let deleteButton = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(handleDelete))
         
@@ -94,7 +94,7 @@ class DeletedContactsViewController: UIViewController {
             toolbarItems?.removeAll()
         }
 
-        toolbarItems = [recoverButton, flexibleSpace, doneButton, flexibleSpace, deleteButton]
+        toolbarItems = [restoreButton, flexibleSpace, doneButton, flexibleSpace, deleteButton]
     }
 
 //    MARK: - HANDLERS

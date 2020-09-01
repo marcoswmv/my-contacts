@@ -23,9 +23,9 @@ class ContactsDataSource: BaseDataSource {
         
         self.deleteSelectedContacts = { [weak self] indexPath in
             guard let self = self else { return }
-            let contactToDeleteID = self.data![indexPath.section][indexPath.row].contactID
-            ContactStoreManager.shared.deleteContact(with: contactToDeleteID)
-            DataBaseManager.shared.setAsDeletedContact(with: contactToDeleteID)
+            let contactToDelete = self.data![indexPath.section][indexPath.row]
+            ContactStoreManager.shared.deleteContact(with: contactToDelete.contactID)
+            DataBaseManager.shared.setAsDeleted(contact: contactToDelete)
             self.removeEmptySection(indexPath, self.tableView)
         }
     }
@@ -74,9 +74,9 @@ class ContactsDataSource: BaseDataSource {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let contactToDeleteID = data![indexPath.section][indexPath.row].contactID
-            ContactStoreManager.shared.deleteContact(with: contactToDeleteID)
-            DataBaseManager.shared.setAsDeletedContact(with: contactToDeleteID)
+            let contactToDelete = data![indexPath.section][indexPath.row]
+            ContactStoreManager.shared.deleteContact(with: contactToDelete.contactID)
+            DataBaseManager.shared.setAsDeleted(contact: contactToDelete)
             removeEmptySection(indexPath, tableView)
         }
     }

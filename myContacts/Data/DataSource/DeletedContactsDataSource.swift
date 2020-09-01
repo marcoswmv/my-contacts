@@ -67,6 +67,20 @@ class DeletedContactsDataSource: BaseDataSource {
         }
     }
     
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let restoreAction = UIContextualAction(style: .normal, title: "Restore") { [weak self] (action, view, completionHandler) in
+            print("Restoring contact...")
+            guard let self = self else { return }
+            let contactToRestore = self.data![indexPath.row]
+            ContactStoreManager.shared.addContact(contactToRestore)
+            DataBaseManager.shared.unsetAsDeleted(contact: contactToRestore)
+            self.tableView.reloadData()
+            completionHandler(true)
+        }
+        restoreAction.backgroundColor = .link
+        return UISwipeActionsConfiguration(actions: [restoreAction])
+    }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
