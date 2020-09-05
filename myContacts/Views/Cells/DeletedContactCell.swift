@@ -18,7 +18,7 @@ class DeletedContactCell: UITableViewCell {
         didSet {
             givenName.text = data?.givenName
             familyName.text = data?.familyName
-            daysUntilPermanentDeletion.text = "\(data!.daysToDeletion) days"
+            daysUntilPermanentDeletion.text = "\(data!.daysUntilDeletion) days"
         }
     }
     

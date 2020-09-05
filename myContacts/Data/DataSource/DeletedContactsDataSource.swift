@@ -49,8 +49,11 @@ class DeletedContactsDataSource: BaseDataSource {
     
     override func reload() {
 //        onLoading!(true)
+        let sharedDatabase = DataBaseManager.shared
+        let result = sharedDatabase.getContacts(wasDeleted: true)
         
-        let result = DataBaseManager.shared.getContacts(wasDeleted: true)
+//        TO-DO: VERIFICATION of work correctness
+        result.forEach { sharedDatabase.updateDaysUntilDeletion(for: $0) }
         data = result
         tableView.reloadData()
     }
