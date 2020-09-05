@@ -16,7 +16,7 @@ class DeletedContactsDataSource: BaseDataSource {
     private var isSearching: Bool = false
     
     var deleteSelectedContacts: ((_ indexPaths: [IndexPath]) -> Void)?
-    var restoreSelectedContacts: ((_ indexPaths: [IndexPath]) -> Void)?
+    var recoverSelectedContacts: ((_ indexPaths: [IndexPath]) -> Void)?
     
     override func setup() {
         super.setup()
@@ -34,15 +34,15 @@ class DeletedContactsDataSource: BaseDataSource {
             }
         }
         
-        self.restoreSelectedContacts = { [weak self] indexPaths in
+        self.recoverSelectedContacts = { [weak self] indexPaths in
             
             guard let self = self else { return }
-            var contactsRestore = [Contact]()
-            for indexPathToRestore in indexPaths {
-                contactsRestore.append(self.data![indexPathToRestore.row])
+            var contactsRecover = [Contact]()
+            for indexPathToRecover in indexPaths {
+                contactsRecover.append(self.data![indexPathToRecover.row])
             }
-            _ = contactsRestore.map({ ContactStoreManager.shared.addContact($0) })
-            DataBaseManager.shared.delete(contacts: contactsRestore)
+            _ = contactsRecover.map({ ContactStoreManager.shared.addContact($0) })
+            DataBaseManager.shared.delete(contacts: contactsRecover)
             self.tableView.reloadData()
         }
     }
@@ -84,17 +84,17 @@ class DeletedContactsDataSource: BaseDataSource {
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let restoreAction = UIContextualAction(style: .normal, title: "Restore") { [weak self] (action, view, completionHandler) in
+        let recoverAction = UIContextualAction(style: .normal, title: "Recover") { [weak self] (action, view, completionHandler) in
             
             guard let self = self else { return }
-            let contactToRestore = self.data![indexPath.row]
-            ContactStoreManager.shared.addContact(contactToRestore)
-            DataBaseManager.shared.delete(contacts: [contactToRestore])
+            let contactToRecover = self.data![indexPath.row]
+            ContactStoreManager.shared.addContact(contactToRecover)
+            DataBaseManager.shared.delete(contacts: [contactToRecover])
             self.tableView.reloadData()
             completionHandler(true)
         }
-        restoreAction.backgroundColor = .link
-        return UISwipeActionsConfiguration(actions: [restoreAction])
+        recoverAction.backgroundColor = .link
+        return UISwipeActionsConfiguration(actions: [recoverAction])
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

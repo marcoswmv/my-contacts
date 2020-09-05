@@ -95,7 +95,7 @@ public class DataBaseManager {
     }
     
 /// This method is used to unset the contact as deleted.
-/// This is done after the contact is restored to user's native "Contacts" App
+/// This is done after the contact is recovered to user's native "Contacts" App
     func unsetAsDeleted(contact: Contact) {
         try! realm.write {
             contact.setValue(false, forKey: "wasDeleted")

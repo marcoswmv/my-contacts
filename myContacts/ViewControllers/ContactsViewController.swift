@@ -49,8 +49,9 @@ class ContactsViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        isManaging = false
-        navigationController?.setToolbarHidden(true, animated: true)
+//        isManaging = false
+//        navigationController?.setToolbarHidden(true, animated: true)
+        setContactsScreenUIToDefaultState()
     }
     
     
@@ -105,6 +106,16 @@ class ContactsViewController: BaseViewController {
         toolbarItems = [addButton, flexibleSpace, doneButton, flexibleSpace, deleteButton]
     }
     
+    fileprivate func setContactsScreenUIToDefaultState() {
+        navigationItem.rightBarButtonItem?.isEnabled = true
+        navigationItem.leftBarButtonItem?.isEnabled = true
+        
+        isManaging = false
+        navigationController?.setToolbarHidden(true, animated: true)
+        tableView.setEditing(false, animated: true)
+        tableView.isEditing = false
+    }
+    
     
 //    MARK: - HANDLERS
     
@@ -128,17 +139,15 @@ class ContactsViewController: BaseViewController {
     }
     
     @objc private func handleDone() {
-        navigationItem.rightBarButtonItem?.isEnabled = true
-        navigationItem.leftBarButtonItem?.isEnabled = true
-        
-        isManaging = false
-        navigationController?.setToolbarHidden(true, animated: true)
-        tableView.setEditing(false, animated: true)
-        tableView.isEditing = false
+        setContactsScreenUIToDefaultState()
     }
     
     @objc private func handleAdd() {
-        print("Handling addition")
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let newContactVC = storyboard.instantiateViewController(withIdentifier: "NewContactViewController") as! NewContactViewController
+        
+        present(newContactVC, animated: true)
     }
     
     @objc private func handleDelete() {
