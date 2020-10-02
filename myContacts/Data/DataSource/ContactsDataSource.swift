@@ -73,11 +73,15 @@ class ContactsDataSource: BaseDataSource {
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        print("Here")
         if editingStyle == .delete {
+            print("Deleting")
             let contactToDelete = data![indexPath.section][indexPath.row]
             ContactStoreManager.shared.deleteContact(with: contactToDelete.contactID)
             DataBaseManager.shared.setAsDeleted(contact: contactToDelete)
             removeEmptySection(indexPath, tableView)
+        } else if editingStyle == .insert {
+            
         }
     }
     
