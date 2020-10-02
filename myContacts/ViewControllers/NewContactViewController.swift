@@ -15,7 +15,7 @@ class NewContactViewController: FormViewController {
     @IBOutlet weak var doneButton: UIButton!
     
     @IBAction func pickImageOnTouchUpInside(_ sender: Any) {
-        
+        choosePhotoSourceAlertController()
     }
     
     @IBAction func cancelOnTouchUpInside(_ sender:
@@ -25,6 +25,7 @@ class NewContactViewController: FormViewController {
     
     @IBAction func doneOnTouchUpInside(_ sender: Any) {
 //        TO-DO: Save new contact
+        retrieveFormValues()
         dismiss(animated: true)
     }
     
@@ -58,14 +59,15 @@ class NewContactViewController: FormViewController {
     
     fileprivate func layoutNewContactForm() {
         form +++ Section()
-            <<< TextRow() { row in
-                row.placeholder = "First name"
+            <<< TextRow("firstName") {
+                $0.placeholder = "First name"
             }
-            <<< TextRow() { row in
-                row.placeholder = "Family name"
+            <<< TextRow("familyName") {
+                $0.placeholder = "Family name"
             }
             
             +++ MultivaluedSection(multivaluedOptions: [.Insert, .Delete]) {
+                $0.tag = "phoneNumbers"
                 $0.addButtonProvider = { section in
                     return ButtonRow() {
                         $0.title = "Add"
@@ -76,13 +78,15 @@ class NewContactViewController: FormViewController {
                     }
                 }
                 $0.multivaluedRowToInsertAt = { index in
-                    return NameRow() {
+                    return PhoneRow() {
                         $0.placeholder = "Phone"
                     }
                 }
             }
             
+            
             +++ MultivaluedSection(multivaluedOptions: [.Insert, .Delete]) {
+                $0.tag = "emails"
                 $0.addButtonProvider = { section in
                     return ButtonRow() {
                         $0.title = "Add"
@@ -93,8 +97,9 @@ class NewContactViewController: FormViewController {
                     }
                 }
                 $0.multivaluedRowToInsertAt = { index in
-                    return NameRow() {
+                    return EmailRow() {
                         $0.placeholder = "Email"
+                        $0.add(rule: RuleEmail())
                     }
                 }
             }
@@ -113,7 +118,40 @@ class NewContactViewController: FormViewController {
         layoutNewContactForm()
     }
     
+    fileprivate func retrieveFormValues() {
+        self.view.endEditing(true)
+        
+        let firstNameRow: TextRow? = form.rowBy(tag: "firstName")
+        let familyNameRow: TextRow? = form.rowBy(tag: "familyName")
+        let phoneNumberSection: MultivaluedSection? = form.sectionBy(tag: "phoneNumbers") as? MultivaluedSection
+        let emailsSection: MultivaluedSection? = form.sectionBy(tag: "emails") as? MultivaluedSection
+        
+        if let firstName = firstNameRow?.value,
+           let familyName = familyNameRow?.value,
+           let phoneNumberRows = phoneNumberSection?.allRows.dropLast(),
+           let emailRows = emailsSection?.allRows.dropLast(),
+           let newPhoto = photo.image?.pngData(){
+            
+            var phoneNumbers = [String]()
+            var emails = [String]()
+    
+            phoneNumberRows.forEach { (row) in
+                phoneNumbers.append(row.baseValue as! String)
+            }
+            emailRows.forEach { (row) in
+                emails.append(row.baseValue as! String)
+            }
+            
+            if !firstName.isEmpty || !familyName.isEmpty {
+                NewContactManager.shared.createNewContact(firstName, familyName, phoneNumbers, emails, newPhoto)
+            } else {
+                Alert.showEmptyFieldsAlert(on: self, message: "Please, enter first or family name!")
+            }
+        }
+        
+    }
+    
     @objc private func handleTapGesture(tapGestureRecognizer: UITapGestureRecognizer) {
-        print("Picking photo")
+        choosePhotoSourceAlertController()
     }
 }

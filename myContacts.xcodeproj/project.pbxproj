@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0148444430F934433469AD13 /* libPods-myContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF8C9E70BAF4B0D313EB65A7 /* libPods-myContacts.a */; };
+		F709D0912526CAF6004CCF96 /* NewContactVC+ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F709D0902526CAF6004CCF96 /* NewContactVC+ImagePicker.swift */; };
 		F7129FEE24FB3CAF00B239BD /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7129FED24FB3CAF00B239BD /* Constants.swift */; };
 		F7129FF024FB4FE100B239BD /* DeletedContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7129FEF24FB4FE100B239BD /* DeletedContactsViewController.swift */; };
 		F7129FF224FB525C00B239BD /* DeletedContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7129FF124FB525C00B239BD /* DeletedContactCell.swift */; };
@@ -40,6 +41,7 @@
 		15C586D4D88948F056185F0D /* Pods-myContacts.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-myContacts.debug.xcconfig"; path = "Target Support Files/Pods-myContacts/Pods-myContacts.debug.xcconfig"; sourceTree = "<group>"; };
 		AF8C9E70BAF4B0D313EB65A7 /* libPods-myContacts.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-myContacts.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC687EC21CCCB0F235825FF9 /* Pods-myContacts.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-myContacts.release.xcconfig"; path = "Target Support Files/Pods-myContacts/Pods-myContacts.release.xcconfig"; sourceTree = "<group>"; };
+		F709D0902526CAF6004CCF96 /* NewContactVC+ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewContactVC+ImagePicker.swift"; sourceTree = "<group>"; };
 		F7129FED24FB3CAF00B239BD /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F7129FEF24FB4FE100B239BD /* DeletedContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletedContactsViewController.swift; sourceTree = "<group>"; };
 		F7129FF124FB525C00B239BD /* DeletedContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletedContactCell.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 				F7D4F3D524D35D4100C4DF99 /* BaseViewController+TextFieldNavigation.swift */,
 				F71CE4FB24D499590054EC64 /* ContactsVC+SearchBarDelegate.swift */,
 				F7129FF524FB685C00B239BD /* DeletedContactsVC+SearchBarDelegate.swift */,
+				F709D0902526CAF6004CCF96 /* NewContactVC+ImagePicker.swift */,
 				F7D4F3D124D35B9200C4DF99 /* UIApplication+TopViewController.swift */,
 			);
 			path = Extensions;
@@ -348,6 +351,7 @@
 				F7B6620024DC585B000C2EB8 /* ContactCell.swift in Sources */,
 				F7D4F3B224D0788500C4DF99 /* ContactsViewController.swift in Sources */,
 				F7D4F3CB24D358CE00C4DF99 /* BaseDataSource.swift in Sources */,
+				F709D0912526CAF6004CCF96 /* NewContactVC+ImagePicker.swift in Sources */,
 				F7129FF624FB685C00B239BD /* DeletedContactsVC+SearchBarDelegate.swift in Sources */,
 				F71CE4FA24D492C00054EC64 /* KeyboardLayoutConstraint.swift in Sources */,
 				F7129FF024FB4FE100B239BD /* DeletedContactsViewController.swift in Sources */,

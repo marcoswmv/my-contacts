@@ -33,7 +33,7 @@ public struct ContactStoreManager {
                 } else if granted {
                     
                     let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey,
-                    CNContactThumbnailImageDataKey, CNContactImageDataAvailableKey,
+                    CNContactImageDataKey, CNContactImageDataAvailableKey,
                     CNContactIdentifierKey, CNContactOrganizationNameKey, CNContactEmailAddressesKey]
                     let request = CNContactFetchRequest(keysToFetch: keys as [CNKeyDescriptor])
                     

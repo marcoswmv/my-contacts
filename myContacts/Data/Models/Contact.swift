@@ -43,7 +43,7 @@ class Contact: Object {
         self.givenName = contact.givenName != "" ? contact.givenName : contact.organizationName
         self.familyName = contact.familyName
         self.imageDataAvailable = contact.imageDataAvailable
-        self.thumbnailPhoto = (self.imageDataAvailable ? contact.thumbnailImageData! : Data())
+        self.thumbnailPhoto = (self.imageDataAvailable ? contact.imageData ?? Data() : Data())
         self.wasDeleted = false
         self.daysUntilDeletion = 0
         
