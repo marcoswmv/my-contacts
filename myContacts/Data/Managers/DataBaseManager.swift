@@ -15,8 +15,9 @@ public class DataBaseManager {
     typealias ContactsFetchingCompletionHandler = (_ contact: Results<Contact>?, _ error: Error?) -> Void
     
     private let realm = try! Realm()
-    var token: NotificationToken!
+    private var token: NotificationToken!
     var dataChanged: ((_ result: Results<Contact>?) -> Void)?
+    private let calendar = Calendar.current
     
 ///    This singleton was created in order to avoid more than one object of type DataBaseManager being created.
 ///    The init() is declared to prevent the struct's memberwise/parenthesys "()" from appearing
@@ -81,16 +82,17 @@ public class DataBaseManager {
 /// This method is used to set the contact as deleted.
 /// The contact is removed instantly from user's native "Contacts" App but it's stored in the database for later use (restoration).
     func setAsDeleted(contact: Contact) {
-        
-        let calendar = Calendar.current
         let dayOfDeletion = Date()
-        let scheduledDayOfDeletion = calendar.date(byAdding: .day, value: 30, to: dayOfDeletion)
-        
+       
+        guard let scheduledDayOfDeletion = calendar.date(byAdding: .day, value: 30, to: dayOfDeletion),
+            let daysLeftForDeletion = calendar.dateComponents([.day],
+                                                              from: dayOfDeletion,
+                                                              to: scheduledDayOfDeletion).day else { return }
         try! realm.write {
             contact.setValue(true, forKey: "wasDeleted")
             contact.setValue(dayOfDeletion, forKey: "dayOfDeletion")
             contact.setValue(scheduledDayOfDeletion, forKey: "scheduledDayOfDeletion")
-            contact.setValue(30, forKey: "daysUntilDeletion")
+            contact.setValue(daysLeftForDeletion, forKey: "daysUntilDeletion")
         }
     }
     
@@ -113,18 +115,18 @@ public class DataBaseManager {
     
 /// This method is going to update the days until deletion for a contact or delete it in case there are no days left
     func updateDaysUntilDeletion(for contact: Contact) {
-        let calendar = Calendar.current
+        let currentDay = Date()
         
-        guard let dayOfDeletion = contact.dayOfDeletion,
-            let scheduledDayOfDeletion = contact.scheduledDayOfDeletion,
-            let daysLeftForDeletion = calendar.dateComponents([.day],
-                                                              from: dayOfDeletion,
+//        TO-DO: Problem with daysUntilDeletion. It's returning less days then it should. For ex: on first day of deletion it should show 30 but it's showing 29.
+        guard let scheduledDayOfDeletion = contact.scheduledDayOfDeletion,
+            let daysUntilDeletion = calendar.dateComponents([.day],
+                                                            from: currentDay,
                                                               to: scheduledDayOfDeletion).day else { return }
         
-        if daysLeftForDeletion > 0 {
+        if daysUntilDeletion > 0 {
             try! realm.write({
                 realm.create(Contact.self, value: ["contactID": contact.contactID,
-                                                   "daysUntilDeletion": daysLeftForDeletion], update: .modified)
+                                                   "daysUntilDeletion": daysUntilDeletion], update: .modified)
             })
         } else {
             try! realm.write {
