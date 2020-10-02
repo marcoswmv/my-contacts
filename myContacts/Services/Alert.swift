@@ -31,11 +31,35 @@ public class Alert {
                        message: message)
     }
     
+    static func showEmptyFieldsAlert(on viewController: UIViewController, message: String) {
+        showBasicAlert(on: viewController,
+                       style: .alert,
+                       title: NSLocalizedString("Empty fields", comment: "Empty fields alert title"),
+                       message: message)
+    }
+    
+    static func showUnavailableCameraAlert(on viewController: UIViewController) {
+        showBasicAlert(on: viewController,
+                       style: .alert,
+                       title: NSLocalizedString("Unavailable camera", comment: "Unavailable camera alert title"),
+                       message: NSLocalizedString("Unfortunately the camera is not available. Please try again later.",
+                                                  comment: "Unavailable camera alert message"))
+    }
+    
     static func showNoContactSelectedAlert(on viewController: UIViewController, message: String) {
         showBasicAlert(on: viewController,
                        style: .alert,
                        title: NSLocalizedString("No Contact To Delete", comment: "No contact to delete alert title"),
                        message: message)
+    }
+    
+    static func showPhotoSourceActionSheet(on viewController: UIViewController, actions: [UIAlertAction]) {
+        showBasicAlert(on: viewController,
+                       style: .actionSheet,
+                       title: "Choose source",
+                       message: nil,
+                       actions: actions,
+                       completion: nil)
     }
     
     static func showActionSheetToAskForConfirmationToDelete(on viewController: UIViewController, _ completionHandler: @escaping ((Bool) -> Void)) {

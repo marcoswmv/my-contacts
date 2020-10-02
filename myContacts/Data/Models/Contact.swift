@@ -18,7 +18,10 @@ class Contact: Object {
     @objc dynamic var thumbnailPhoto = Data()
     @objc dynamic var imageDataAvailable = false
     @objc dynamic var wasDeleted = false
-    @objc dynamic var daysToDeletion = 0
+    
+    @objc dynamic var daysUntilDeletion = 0
+    @objc dynamic var dayOfDeletion: Date? = nil
+    @objc dynamic var scheduledDayOfDeletion: Date? = nil
     
     let phoneNumbersLabels = List<String>()
     let phoneNumbers = List<String>()
@@ -40,9 +43,10 @@ class Contact: Object {
         self.givenName = contact.givenName != "" ? contact.givenName : contact.organizationName
         self.familyName = contact.familyName
         self.imageDataAvailable = contact.imageDataAvailable
-        self.thumbnailPhoto = (self.imageDataAvailable ? contact.thumbnailImageData! : Data())
+        self.thumbnailPhoto = (self.imageDataAvailable ? contact.imageData ?? Data() : Data())
         self.wasDeleted = false
-        self.daysToDeletion = 0
+        self.daysUntilDeletion = 0
+        
         
         for contact in contact.phoneNumbers {
             self.phoneNumbersLabels.append(contact.label?.description ?? "Mobile")

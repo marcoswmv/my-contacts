@@ -24,8 +24,7 @@ public struct ContactStoreManager {
     
     func requestContacts(completionHandler: @escaping ContactsFetchingCompletionHandler) {
         
-        DispatchQueue.global(qos: .background).async {
-            
+        DispatchQueue.main.async {
             self.store.requestAccess(for: .contacts) { (granted, error) in
                 
                 if let errorToCatch = error {
@@ -33,10 +32,8 @@ public struct ContactStoreManager {
                     completionHandler(nil, errorToCatch)
                 } else if granted {
                     
-//                    print("Access granted!")
-                    
                     let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey,
-                    CNContactThumbnailImageDataKey, CNContactImageDataAvailableKey,
+                    CNContactImageDataKey, CNContactImageDataAvailableKey,
                     CNContactIdentifierKey, CNContactOrganizationNameKey, CNContactEmailAddressesKey]
                     let request = CNContactFetchRequest(keysToFetch: keys as [CNKeyDescriptor])
                     

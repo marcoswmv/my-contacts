@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import NVActivityIndicatorView
+//import NVActivityIndicatorView
 
 class BaseViewController: UIViewController, UITextFieldDelegate {
 
